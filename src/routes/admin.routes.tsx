@@ -21,11 +21,14 @@ import EmployeeList from "@/components/pages/dashboard/admin/employee-management
 import CreateProduct from "@/components/pages/dashboard/admin/product/CreateProduct";
 import Products from "@/components/pages/dashboard/admin/product/Products";
 import UpdateProduct from "@/components/pages/dashboard/admin/product/UpdateProduct";
+import CreateWarehouse from "@/components/pages/dashboard/admin/warehouse/CreateWarehouse";
+import Warehouse from "@/components/pages/dashboard/admin/warehouse/Warehouse";
 import SaleEntry from "@/components/shared/saleEntry/SaleEntry";
 import { TUserPath } from "@/type/routesAndSidebarItems.type";
 import {
   Book,
   DollarSign,
+  WarehouseIcon,
   LayoutDashboard,
   User,
   UserCircle,
@@ -117,6 +120,16 @@ export const adminPaths: TUserPath[] = [
         element: <EditCategory />,
       },
     ],
+  },
+  {
+    name: "Warehouse",
+    path: "warehouse",
+    element: <Warehouse />,
+    icon: WarehouseIcon,
+  },
+  {
+    path: "create-warehouse",
+    element: <CreateWarehouse />,
   },
   {
     name: "Book Management",

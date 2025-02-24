@@ -44,6 +44,7 @@ type TMySelect = {
   placeholder: string;
   isGrid?: boolean;
   options: TSelectOption[];
+  disabled?: boolean;
   isSuggestion: boolean;
   required?: boolean;
 };
@@ -55,6 +56,7 @@ const MySelect = ({
   isGrid,
   options,
   isSuggestion,
+  disabled = false,
   required = true,
 }: TMySelect) => {
   const form = useFormContext();
@@ -62,6 +64,7 @@ const MySelect = ({
     <FormField
       control={form.control}
       name={name}
+      disabled={disabled}
       render={({ field, fieldState: { error } }) => {
         return (
           <div className="w-full">
