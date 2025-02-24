@@ -60,7 +60,7 @@ const PageHeader = ({ pageTitle, createBtnPaht, isBack }: TPageHeaderProps) => {
           <CornerUpLeft className="size-5" />
         </Button>
       ) : (
-        "none"
+        ""
       )}
     </div>
   );

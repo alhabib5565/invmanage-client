@@ -1,5 +1,6 @@
 import AdminBookSaleList from "@/components/pages/dashboard/admin/admin-book-sale/AdminBookSaleList";
 import AdminDashboardHome from "@/components/pages/dashboard/admin/admin-dashboard-home/AdminDashboardHome";
+import BaseUnits from "@/components/pages/dashboard/admin/base-unit/BaseUnits";
 import BookPurchaseList from "@/components/pages/dashboard/admin/book-purchase/BookPurchaseList";
 import CreateBookPurchase from "@/components/pages/dashboard/admin/book-purchase/CreateBookPurchase";
 import BookList from "@/components/pages/dashboard/admin/book/BookList";
@@ -21,6 +22,7 @@ import EmployeeList from "@/components/pages/dashboard/admin/employee-management
 import CreateProduct from "@/components/pages/dashboard/admin/product/CreateProduct";
 import Products from "@/components/pages/dashboard/admin/product/Products";
 import UpdateProduct from "@/components/pages/dashboard/admin/product/UpdateProduct";
+import Units from "@/components/pages/dashboard/admin/unit/Units";
 import CreateWarehouse from "@/components/pages/dashboard/admin/warehouse/CreateWarehouse";
 import Warehouse from "@/components/pages/dashboard/admin/warehouse/Warehouse";
 import SaleEntry from "@/components/shared/saleEntry/SaleEntry";
@@ -85,6 +87,7 @@ export const adminPaths: TUserPath[] = [
         path: "create-product",
         element: <CreateProduct />,
       },
+
       {
         path: ":id/edit-product",
         element: <UpdateProduct />,
@@ -118,6 +121,19 @@ export const adminPaths: TUserPath[] = [
       {
         path: ":id/edit-category",
         element: <EditCategory />,
+      },
+      // units related
+      {
+        name: "Base Units",
+        path: "base-units",
+        element: <BaseUnits />,
+        icon: User,
+      },
+      {
+        name: "Units",
+        path: "units",
+        element: <Units />,
+        icon: User,
       },
     ],
   },
