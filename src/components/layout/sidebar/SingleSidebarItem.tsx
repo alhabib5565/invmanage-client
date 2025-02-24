@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { TSidebarItem } from "@/type/routesAndSidebarItems.type";
-import { ChevronRight, Dot } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
 type SidebarItemProps = {
@@ -22,11 +22,7 @@ const SingleSidebarItem = ({ item, isDropdownItem }: SidebarItemProps) => {
       }
     >
       <div className="flex gap-4 items-center">
-        {isDropdownItem ? (
-          <Dot />
-        ) : (
-          <item.icon className="size-6 text-primary" />
-        )}
+        <item.icon className="size-5 text-primary" />
         <span className="text-light-subtext"> {item?.label}</span>
       </div>
       <ChevronRight className="text-light-subtext size-5" />

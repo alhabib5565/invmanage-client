@@ -7,4 +7,8 @@ export const tags = {
   EmpBookAssign: "EmpBookAssign",
   Payment: "Payment",
   Category: "Category",
+  Brand: "Brand",
+  Unit: "Unit",
+  BaseUnit: "BaseUnit",
+  Warehouse: "Warehouse",
 } as const;

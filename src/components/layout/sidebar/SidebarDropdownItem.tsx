@@ -25,7 +25,7 @@ const SidebarDropdownItem = ({
 
   if (!item?.icon) return;
   return (
-    <div className={cn({ "bg-[#EDF4FC80]": isDropdownOpen })}>
+    <div className={cn({ "bg-[#EDF4FC80]": isDropdownOpen === item.label })}>
       <button
         onClick={() => handleDropdownOpen(item.label)}
         className="hover:bg-secondary w-full flex gap-1.5 items-center justify-between rounded-[8px] p-4 text-[16px] leading-[22.4px] tracking-[0.2px] text-light-subtext"

@@ -9,20 +9,28 @@ import { useState } from "react";
 import MyTextarea from "@/components/from/MyTextarea";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { warehouseDefaultValue, warehouseSchema } from "./warehouse.validation";
-import { useNavigate } from "react-router-dom";
-import { useCreateWarehouseMutation } from "@/redux/api/admin/warehouse.api";
+import { warehouseSchema } from "./warehouse.validation";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  useEditWarehouseMutation,
+  useGetSingleWarehouseQuery,
+} from "@/redux/api/admin/warehouse.api";
 import { toast } from "sonner";
-const CreateWarehouse = () => {
-  const [division, setDivision] = useState("");
+import Loading from "@/components/shared/Loading";
+const EditWarehouse = () => {
+  const { id } = useParams();
+  const { data, isLoading: warehouseQueryLoading } =
+    useGetSingleWarehouseQuery(id);
+  const [division, setDivision] = useState(data?.data?.slug);
   const navigate = useNavigate();
 
-  const [createWarehouse, { isLoading }] = useCreateWarehouseMutation();
+  const [editWarehouse, { isLoading }] = useEditWarehouseMutation();
+  if (warehouseQueryLoading) return <Loading />;
 
   const onSubmit = async (value: FieldValues) => {
     const toastId = toast.loading("Processing your request...");
     try {
-      const res = await createWarehouse(value).unwrap();
+      const res = await editWarehouse({ data: value, id }).unwrap();
       toast.success(res.message || "Request successful!", {
         id: toastId,
       });
@@ -42,7 +50,7 @@ const CreateWarehouse = () => {
         <MyForm
           onSubmit={onSubmit}
           resolver={zodResolver(warehouseSchema)}
-          defaultValues={warehouseDefaultValue}
+          defaultValues={data?.data}
         >
           <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             <MyInput name="name" label="Warehouse Name" type="text" />
@@ -83,4 +91,4 @@ const CreateWarehouse = () => {
   );
 };
 
-export default CreateWarehouse;
+export default EditWarehouse;
