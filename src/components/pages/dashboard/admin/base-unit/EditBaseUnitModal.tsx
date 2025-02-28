@@ -1,23 +1,32 @@
-import MyModal from "@/components/shared/MyModal";
 import MyForm from "@/components/from/MyForm";
+import MyModal from "@/components/shared/MyModal";
+import { Button } from "@/components/ui/button";
+import {
+  useEditBaseUnitMutation,
+  useGetSingleBaseUnitQuery,
+} from "@/redux/api/admin/baseUnit.api";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { PenSquare } from "lucide-react";
+import { useState } from "react";
 import { FieldValues } from "react-hook-form";
+import { toast } from "sonner";
+import { baseUnitFormSchema } from "./baseUnit.validation";
 import MyInput from "@/components/from/MyInput";
 import MyTextarea from "@/components/from/MyTextarea";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useCreateBaseUnitMutation } from "@/redux/api/admin/baseUnit.api";
-const CreateBaseUnitModal = () => {
+import Loading from "@/components/shared/Loading";
+
+const EditBaseUnitModal = ({ id }: { id: string }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [editBaseUnit, { isLoading: isEditLoading }] =
+    useEditBaseUnitMutation();
 
-  const [createBaseUnit, { isLoading }] = useCreateBaseUnitMutation();
-
+  const { data, isLoading } = useGetSingleBaseUnitQuery(id);
+  if (isLoading) return <Loading />;
+  console.log(data);
   const onSubmit = async (value: FieldValues) => {
     const toastId = toast.loading("Processing your request...");
     try {
-      const res = await createBaseUnit(value).unwrap();
+      const res = await editBaseUnit({ data: value, id }).unwrap();
       toast.success(res.message || "Request successful!", {
         id: toastId,
       });
@@ -29,10 +38,16 @@ const CreateBaseUnitModal = () => {
       });
     }
   };
-
   return (
     <div>
-      <Button onClick={() => setIsOpen(!isOpen)}>Create</Button>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="text-primary"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <PenSquare strokeWidth={2.5} />
+      </Button>
       <MyModal
         isOpen={isOpen}
         setIsOpen={setIsOpen}
@@ -41,7 +56,7 @@ const CreateBaseUnitModal = () => {
         <MyForm
           onSubmit={onSubmit}
           resolver={zodResolver(baseUnitFormSchema)}
-          defaultValues={baseUnitDefaultValue}
+          defaultValues={data?.data}
         >
           <div className="space-y-4">
             <MyInput name="name" label="Base unit name" type="text" />
@@ -53,8 +68,8 @@ const CreateBaseUnitModal = () => {
             />
           </div>
           <div className="flex justify-end mt-4">
-            <Button disabled={isLoading}>
-              {isLoading ? "Loading..." : "Submit"}
+            <Button disabled={isEditLoading}>
+              {isEditLoading ? "Loading..." : "Submit"}
             </Button>
           </div>
         </MyForm>
@@ -63,13 +78,4 @@ const CreateBaseUnitModal = () => {
   );
 };
 
-export default CreateBaseUnitModal;
-
-const baseUnitFormSchema = z.object({
-  name: z.string().min(1, "Base unit name is required"),
-  description: z.string().optional(),
-});
-const baseUnitDefaultValue = {
-  name: "",
-  description: "",
-};
+export default EditBaseUnitModal;
