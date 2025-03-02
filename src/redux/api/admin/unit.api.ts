@@ -12,7 +12,7 @@ const unitApi = baseApi.injectEndpoints({
       invalidatesTags: [tags.Unit],
     }),
 
-    getAllBrands: builder.query({
+    getAllUnits: builder.query({
       query: () => ({
         url: "/units",
       }),
@@ -45,7 +45,7 @@ const unitApi = baseApi.injectEndpoints({
 
 export const {
   useCreateUnitMutation,
-  useGetAllBrandsQuery,
+  useGetAllUnitsQuery,
   useEditUnitMutation,
   useGetSingleUnitQuery,
   useDeleteUnitMutation,
