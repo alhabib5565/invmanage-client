@@ -52,7 +52,7 @@ const CreateWarehouse = () => {
               onValueChange={setDivision}
               name="division"
               label="Division"
-              isSuggestion={false}
+              isSuggestion={true}
               options={divisionOptions}
               placeholder="Search Division"
             />

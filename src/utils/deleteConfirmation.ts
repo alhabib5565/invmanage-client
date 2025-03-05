@@ -28,7 +28,7 @@ export const deleteConfirmation = async (
     } catch (error: any) {
       Swal.fire({
         title: "Error!",
-        text: error.message || "Failed to delete.",
+        text: error?.data?.message || "Failed to delete.",
         icon: "error",
         confirmButtonColor: "#d33",
       });

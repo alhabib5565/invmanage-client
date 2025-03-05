@@ -51,7 +51,7 @@ const Categories = () => {
       <PageHeader createBtnPaht="/admin/create-category" />
       <div className="p-6 border rounded-[16px] space-y-4">
         <div className="flex justify-between items-center gap-4 ">
-          <h3 className="flex-grow">Our All Books</h3>
+          <h3 className="flex-grow">Categories</h3>
           <div className="flex gap-4">
             <Input placeholder="Search..." />
             <Button>Filter</Button>

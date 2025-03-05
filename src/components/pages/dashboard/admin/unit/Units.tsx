@@ -36,7 +36,7 @@ const Units = () => {
       </div>
       <div className="p-6 border rounded-[16px] space-y-4 bg-white">
         <div className="pb-4 flex justify-between items-center gap-4 ">
-          <h3 className="flex-grow">Our Warehouses</h3>
+          <h3 className="flex-grow">Units</h3>
           <div className="flex gap-4">
             <Input placeholder="Search..." />
           </div>

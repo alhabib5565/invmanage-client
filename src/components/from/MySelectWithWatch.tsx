@@ -47,6 +47,7 @@ type TMySelect = {
   options: TSelectOption[];
   isSuggestion: boolean;
   required?: boolean;
+  disabled?: boolean;
   onValueChange: React.Dispatch<React.SetStateAction<string>>;
 };
 
@@ -57,10 +58,13 @@ const MySelectWithWatch = ({
   isGrid,
   options,
   isSuggestion,
+  disabled = false,
   required = true,
   onValueChange,
 }: TMySelect) => {
   const form = useFormContext();
+  const trigger = form.trigger;
+
   const selectValue = useWatch({
     control: form.control,
     name,
@@ -71,143 +75,110 @@ const MySelectWithWatch = ({
   }, [onValueChange, selectValue]);
 
   return (
-    <FormField
-      control={form.control}
-      name={name}
-      render={({ field, fieldState: { error } }) => {
-        return (
-          <div>
-            {isSuggestion ? (
-              <FormField
-                control={form.control}
-                name={name}
-                render={({ field, fieldState: { error } }) => {
-                  return (
-                    <FormItem
-                      className={cn({
-                        "grid grid-cols-7 w-full gap-4 items-center": isGrid,
-                      })}
-                    >
-                      <FormLabel
-                        className={cn({
-                          "col-span-2": isGrid,
-                          "after:content-['*'] after:ml-1 after:text-destructive":
-                            required,
-                          "after:content-['(optional)'] after:ml-0.5":
-                            !required,
-                        })}
-                      >
-                        {label}
-                      </FormLabel>
-                      <div
-                        className={cn("space-y-2", {
-                          "col-span-5": isGrid,
-                        })}
-                      >
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <FormControl>
-                              <Button
-                                variant="outline"
-                                role="combobox"
-                                className={cn(
-                                  "w-full justify-between",
-                                  !field.value && "text-muted-foreground"
-                                )}
-                              >
-                                {field.value
-                                  ? options.find(
-                                      (item) => item.value === field.value
-                                    )?.label
-                                  : `${placeholder || label}`}
-                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-full p-0">
-                            <Command className="w-full">
-                              <CommandInput placeholder={"search..."} />
-                              <CommandList>
-                                <CommandEmpty>No data found.</CommandEmpty>
-                                <CommandGroup>
-                                  {options.map((item) => (
-                                    <CommandItem
-                                      value={item.label}
-                                      key={item.value}
-                                      onSelect={() => {
-                                        form.setValue(name, item.value);
-                                      }}
-                                    >
-                                      <Check
-                                        className={cn(
-                                          "mr-2 h-4 w-4",
-                                          item.value === field.value
-                                            ? "opacity-100"
-                                            : "opacity-0"
-                                        )}
-                                      />
-                                      {item.label}
-                                    </CommandItem>
-                                  ))}
-                                </CommandGroup>
-                              </CommandList>
-                            </Command>
-                          </PopoverContent>
-                        </Popover>
-
-                        <FormMessage>{error?.message}</FormMessage>
-                      </div>
-                    </FormItem>
-                  );
-                }}
-              />
-            ) : (
-              <FormItem
+    <div className="w-full">
+      <FormField
+        control={form.control}
+        name={name}
+        render={({ field, fieldState: { error } }) => {
+          return (
+            <FormItem
+              className={cn({
+                "grid grid-cols-7 w-full gap-4 items-center": isGrid,
+              })}
+            >
+              <FormLabel
                 className={cn({
-                  "grid grid-cols-7 gap-4 items-center": isGrid,
+                  "col-span-2": isGrid,
+                  "after:content-['*'] after:ml-1 after:text-destructive":
+                    required,
+                  "after:content-['(optional)'] after:ml-0.5": !required,
                 })}
               >
-                <FormLabel
-                  className={cn({
-                    "col-span-2": isGrid,
-                    "after:content-['*'] after:ml-1 after:text-destructive":
-                      required,
-                    "after:content-['(optional)'] after:ml-0.5": !required,
-                  })}
-                >
-                  {label}
-                </FormLabel>
-                <FormControl
-                  className={cn({
-                    "col-span-5 ": isGrid,
-                  })}
-                >
-                  <div className="flex flex-col gap-2">
-                    <Select
-                      {...field}
-                      value={field.value}
-                      onValueChange={field.onChange}
-                    >
-                      <SelectTrigger className="w-full min-w-[150px] bg-transparent">
-                        <SelectValue placeholder={placeholder} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {options.map((opt, index) => (
-                          <SelectItem key={index} value={opt.value}>
-                            {opt.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage>{error?.message}</FormMessage>
-                  </div>
-                </FormControl>
-              </FormItem>
-            )}
-          </div>
-        );
-      }}
-    />
+                {label}
+              </FormLabel>
+              <div
+                className={cn("space-y-2", {
+                  "col-span-5": isGrid,
+                })}
+              >
+                {isSuggestion ? (
+                  <Popover>
+                    <PopoverTrigger disabled={disabled} asChild>
+                      <FormControl>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          className={cn(
+                            "w-full justify-between",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value
+                            ? options.find((item) => item.value === field.value)
+                                ?.label
+                            : `${placeholder || label}`}
+                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-full p-0">
+                      <Command className="w-full">
+                        <CommandInput placeholder={"search..."} />
+                        <CommandList>
+                          <CommandEmpty>No data found.</CommandEmpty>
+                          <CommandGroup>
+                            {options.map((item) => (
+                              <CommandItem
+                                value={item.label}
+                                key={item.value}
+                                onSelect={() => {
+                                  form.setValue(name, item.value);
+                                  trigger();
+                                }}
+                              >
+                                <Check
+                                  className={cn(
+                                    "mr-2 h-4 w-4",
+                                    item.value === field.value
+                                      ? "opacity-100"
+                                      : "opacity-0"
+                                  )}
+                                />
+                                {item.label}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                ) : (
+                  <Select
+                    {...field}
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    disabled={disabled}
+                  >
+                    <SelectTrigger className="w-full min-w-[150px] bg-transparent">
+                      <SelectValue placeholder={placeholder} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {options.map((opt, index) => (
+                        <SelectItem key={index} value={opt.value}>
+                          {opt.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+
+                <FormMessage>{error?.message}</FormMessage>
+              </div>
+            </FormItem>
+          );
+        }}
+      />
+    </div>
   );
 };
 

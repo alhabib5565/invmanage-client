@@ -13,8 +13,9 @@ const unitApi = baseApi.injectEndpoints({
     }),
 
     getAllUnits: builder.query({
-      query: () => ({
+      query: (queryParams) => ({
         url: "/units",
+        params: queryParams,
       }),
       providesTags: [tags.Unit],
     }),

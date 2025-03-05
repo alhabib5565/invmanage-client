@@ -10,25 +10,25 @@ import { Input } from "../ui/input";
 import { useFormContext } from "react-hook-form";
 import { cn } from "@/lib/utils";
 
-type TMyInput = {
+type TMyInputWithSuffix = {
   name: string;
   label: string;
-  type: HTMLInputTypeAttribute;
+  suffix: string;
+  type?: HTMLInputTypeAttribute;
   placeholder?: string;
-  isGrid?: boolean;
   required?: boolean;
   className?: string;
 };
 
-const MyInput = ({
+const MyInputWithSuffix = ({
   name,
   label,
-  type,
+  suffix,
+  type = "number",
   placeholder,
-  isGrid,
   required = true,
-  className,
-}: TMyInput) => {
+  className = "",
+}: TMyInputWithSuffix) => {
   const form = useFormContext();
   return (
     <div>
@@ -37,14 +37,9 @@ const MyInput = ({
         name={name}
         render={({ field, fieldState: { error } }) => {
           return (
-            <FormItem
-              className={cn({
-                "grid grid-cols-1 md:grid-cols-7 md:gap-4 items-center": isGrid,
-              })}
-            >
+            <FormItem>
               <FormLabel
                 className={cn({
-                  " md:col-span-2": isGrid,
                   "after:content-['*'] after:ml-1 after:text-destructive":
                     required,
                   "after:content-['(optional)'] after:ml-0.5": !required,
@@ -52,18 +47,20 @@ const MyInput = ({
               >
                 {label}
               </FormLabel>
-              <FormControl
-                className={cn({
-                  "col-span-5": isGrid,
-                })}
-              >
+              <FormControl>
                 <div className="flex flex-col gap-2">
-                  <Input
-                    type={type}
-                    className={cn("bg-transparent", className)}
-                    placeholder={placeholder || label}
-                    {...field}
-                  />
+                  <div className="flex">
+                    <Input
+                      type={type}
+                      className={cn("bg-transparent rounded-r-none", className)}
+                      placeholder={placeholder || label}
+                      {...field}
+                    />
+                    <span className="px-3 grid place-items-center bg-secondary text-primary rounded-r-md border border-l-0">
+                      {suffix}
+                    </span>
+                  </div>
+
                   <FormMessage>{error?.message}</FormMessage>
                 </div>
               </FormControl>
@@ -75,4 +72,4 @@ const MyInput = ({
   );
 };
 
-export default MyInput;
+export default MyInputWithSuffix;
