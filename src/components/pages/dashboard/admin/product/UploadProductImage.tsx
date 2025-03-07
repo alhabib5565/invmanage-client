@@ -1,34 +1,100 @@
 import { Input } from "@/components/ui/input";
-import { ChangeEvent, useState } from "react";
-import defaultImage from "../../../../../assets/brand_logo.png";
+import { ChangeEvent, Dispatch } from "react";
 import { Label } from "@/components/ui/label";
-import { Pen } from "lucide-react";
+import { Loader, PlusCircle, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  useDeleteProductImageMutation,
+  useUploadProductImageMutation,
+} from "@/redux/api/admin/product.api";
+import { toast } from "sonner";
+import { TImage } from "./product.type";
+import { cn } from "@/lib/utils";
+type TProductImgUploadProps = {
+  images: TImage[];
+  setImages: Dispatch<React.SetStateAction<TImage[]>>;
+};
+const UploadProductImage = ({ images, setImages }: TProductImgUploadProps) => {
+  const [uploadImage, { isLoading: isUploadLoading }] =
+    useUploadProductImageMutation();
+  const [deleteImage] = useDeleteProductImageMutation();
 
-const UploadProductImage = () => {
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const handleImageChage = (e: ChangeEvent<HTMLInputElement>) => {
-    setSelectedImage(e?.target?.files && e.target.files[0]);
+  const handleImageChage = async (e: ChangeEvent<HTMLInputElement>) => {
+    if (e?.target?.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      const formData = new FormData();
+      formData.append("file", file);
+      try {
+        const res = await uploadImage(formData).unwrap();
+        toast.success(res.message || "Request successful!");
+        setImages((prevState) => [
+          ...prevState,
+          {
+            secure_url: res?.data?.secure_url,
+            public_id: res?.data?.public_id,
+          },
+        ]);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
+        toast.error(error?.data?.message || "Request failed. Please try again");
+      }
+    }
   };
-  return (
-    <div className="border rounded size-[78px] relative mt-3 bg-[#F2F2F2]">
-      <Label
-        htmlFor="upload"
-        className="absolute bg-white -top-3 -right-3 z-10 border size-10 grid place-items-center rounded-full"
-      >
-        <Pen size={20} />
-      </Label>
-      <Input
-        onChange={handleImageChage}
-        className="hidden"
-        accept=".png"
-        id="upload"
-        type="file"
-      />
 
-      <img
-        className="object-contain h-full w-full"
-        src={selectedImage ? URL.createObjectURL(selectedImage) : defaultImage}
-      />
+  const handleRemoveImage = async (public_id: string) => {
+    await deleteImage(public_id);
+    setImages(images.filter((image) => image.public_id !== public_id));
+  };
+
+  return (
+    <div className="grid grid-cols-5">
+      {images.map((image, index) => (
+        <div key={index} className="relative">
+          <img
+            className="object-contain border rounded size-[78px]"
+            src={image?.secure_url}
+          />
+          <Button
+            type="button"
+            onClick={() => handleRemoveImage(image.public_id)}
+            variant="outline"
+            className=" p-0 h-fit size-6 rounded-full absolute top-1 right-3 z-10 text-red-500 hover:text-red-500"
+          >
+            <X />
+          </Button>
+        </div>
+      ))}
+
+      {images.length < 5 && (
+        <div className="border rounded size-[78px] relative">
+          <Label
+            htmlFor="upload"
+            className={cn(
+              "cursor-pointer absolute bg-secondary text-primary inset-0 z-10 border grid items-center justify-center gap-1",
+              {
+                "cursor-not-allowed": isUploadLoading,
+              }
+            )}
+          >
+            {isUploadLoading ? (
+              <Loader className="animate-spin" />
+            ) : (
+              <span className="text-xs">
+                <PlusCircle size={25} className="mx-auto mb-1" />
+                Add Image
+              </span>
+            )}
+          </Label>
+          <Input
+            disabled={isUploadLoading}
+            onChange={handleImageChage}
+            className="hidden"
+            accept=".png"
+            id="upload"
+            type="file"
+          />
+        </div>
+      )}
     </div>
   );
 };

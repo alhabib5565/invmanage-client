@@ -14,18 +14,38 @@ import useCategoryOptions from "@/hooks/useCategoryOptions";
 import useBaseUnitOptions from "@/hooks/useBaseUnitOptions";
 import useUnitOptions from "@/hooks/useUnitOptions";
 import UploadProductImage from "./UploadProductImage";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { productDefaultValues, productSchema } from "./product.validation";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
+import { useCreateProductMutation } from "@/redux/api/admin/product.api";
+import { TImage } from "./product.type";
 
 const CreateProduct = () => {
   // state
   const [productUnit, setProductUnit] = useState("");
+  const [images, setImages] = useState<TImage[]>([]);
 
   const setProductUnitAction = useCallback(setProductUnit, [setProductUnit]);
+  const navigate = useNavigate();
 
-  const onSubmit = (value: FieldValues) => {
-    console.log(value);
+  const [createProduct, { isLoading }] = useCreateProductMutation();
+
+  const onSubmit = async (value: FieldValues) => {
+    const toastId = toast.loading("Processing your request...");
+    try {
+      const res = await createProduct(value).unwrap();
+      toast.success(res.message || "Request successful!", {
+        id: toastId,
+      });
+      navigate("/admin/products");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Request failed. Please try again", {
+        id: toastId,
+      });
+    }
   };
-
-  const isLoading = false;
 
   // select options
   const { brandOptions } = useBrandOption();
@@ -38,10 +58,10 @@ const CreateProduct = () => {
       <div className="bg-white rounded-[16px] p-6 shadow border border-[#f2f4f7]">
         <MyForm
           onSubmit={onSubmit}
-          // resolver={zodResolver(warehouseSchema)}
-          // defaultValues={warehouseDefaultValue}
+          resolver={zodResolver(productSchema)}
+          defaultValues={productDefaultValues}
         >
-          <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-end">
+          <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             <MyInput name="productName" label="Product Name" type="text" />
 
             <MySelect
@@ -133,8 +153,8 @@ const CreateProduct = () => {
             <div className="col-span-1 lg:col-span-2">
               <MyTextarea name="note" label="Note" rows={2} required={false} />
             </div>
-            <div className="col-span-1 items-end">
-              <UploadProductImage />
+            <div className="col-span-1 h-full grid items-end">
+              <UploadProductImage images={images} setImages={setImages} />
             </div>
           </div>
           <div className="flex justify-end mt-4">

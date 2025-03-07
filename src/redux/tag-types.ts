@@ -8,6 +8,7 @@ export const tags = {
   Payment: "Payment",
   Category: "Category",
   Brand: "Brand",
+  Product: "Product",
   Unit: "Unit",
   BaseUnit: "BaseUnit",
   Warehouse: "Warehouse",
