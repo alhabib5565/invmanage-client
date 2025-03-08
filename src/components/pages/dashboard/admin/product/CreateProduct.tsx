@@ -32,6 +32,7 @@ const CreateProduct = () => {
   const [createProduct, { isLoading }] = useCreateProductMutation();
 
   const onSubmit = async (value: FieldValues) => {
+    value.images = images;
     const toastId = toast.loading("Processing your request...");
     try {
       const res = await createProduct(value).unwrap();
@@ -144,12 +145,7 @@ const CreateProduct = () => {
               placeholder="Enter Stock Alert"
               type="number"
             />
-            <MyInput
-              name="stockAlert"
-              label="Stock alert"
-              placeholder="Enter Stock Alert"
-              type="number"
-            />
+
             <div className="col-span-1 lg:col-span-2">
               <MyTextarea name="note" label="Note" rows={2} required={false} />
             </div>

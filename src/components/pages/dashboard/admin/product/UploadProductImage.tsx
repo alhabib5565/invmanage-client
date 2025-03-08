@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Input } from "@/components/ui/input";
 import { ChangeEvent, Dispatch } from "react";
 import { Label } from "@/components/ui/label";
@@ -10,14 +11,21 @@ import {
 import { toast } from "sonner";
 import { TImage } from "./product.type";
 import { cn } from "@/lib/utils";
+import Swal from "sweetalert2";
 type TProductImgUploadProps = {
   images: TImage[];
   setImages: Dispatch<React.SetStateAction<TImage[]>>;
+  isConfirmationDelete?: boolean;
 };
-const UploadProductImage = ({ images, setImages }: TProductImgUploadProps) => {
+const UploadProductImage = ({
+  images,
+  setImages,
+  isConfirmationDelete = false,
+}: TProductImgUploadProps) => {
   const [uploadImage, { isLoading: isUploadLoading }] =
     useUploadProductImageMutation();
-  const [deleteImage] = useDeleteProductImageMutation();
+  const [deleteImage, { isLoading: deleteLoding }] =
+    useDeleteProductImageMutation();
 
   const handleImageChage = async (e: ChangeEvent<HTMLInputElement>) => {
     if (e?.target?.files && e.target.files.length > 0) {
@@ -42,13 +50,45 @@ const UploadProductImage = ({ images, setImages }: TProductImgUploadProps) => {
   };
 
   const handleRemoveImage = async (public_id: string) => {
-    await deleteImage(public_id);
-    setImages(images.filter((image) => image.public_id !== public_id));
+    if (isConfirmationDelete) {
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      });
+
+      if (result.isConfirmed) {
+        try {
+          const res: any = await deleteImage(public_id).unwrap();
+          setImages(images.filter((image) => image.public_id !== public_id));
+          Swal.fire({
+            title: "Deleted!",
+            text: res?.message || "Deleted successfully.",
+            icon: "success",
+            confirmButtonColor: "#3085d6",
+          });
+        } catch (error: any) {
+          Swal.fire({
+            title: "Error!",
+            text: error?.data?.message || "Failed to delete.",
+            icon: "error",
+            confirmButtonColor: "#d33",
+          });
+        }
+      }
+    } else {
+      await deleteImage(public_id);
+      setImages(images.filter((image) => image.public_id !== public_id));
+    }
   };
 
   return (
     <div className="grid grid-cols-5">
-      {images.map((image, index) => (
+      {images?.map((image, index) => (
         <div key={index} className="relative">
           <img
             className="object-contain border rounded size-[78px]"
@@ -56,7 +96,8 @@ const UploadProductImage = ({ images, setImages }: TProductImgUploadProps) => {
           />
           <Button
             type="button"
-            onClick={() => handleRemoveImage(image.public_id)}
+            disabled={deleteLoding}
+            onClick={() => handleRemoveImage(image?.public_id)}
             variant="outline"
             className=" p-0 h-fit size-6 rounded-full absolute top-1 right-3 z-10 text-red-500 hover:text-red-500"
           >
@@ -65,7 +106,7 @@ const UploadProductImage = ({ images, setImages }: TProductImgUploadProps) => {
         </div>
       ))}
 
-      {images.length < 5 && (
+      {images?.length < 5 && (
         <div className="border rounded size-[78px] relative">
           <Label
             htmlFor="upload"

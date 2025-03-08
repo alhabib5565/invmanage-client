@@ -63,7 +63,6 @@ const MySelectWithWatch = ({
   onValueChange,
 }: TMySelect) => {
   const form = useFormContext();
-  const trigger = form.trigger;
 
   const selectValue = useWatch({
     control: form.control,
@@ -133,7 +132,6 @@ const MySelectWithWatch = ({
                                 key={item.value}
                                 onSelect={() => {
                                   form.setValue(name, item.value);
-                                  trigger();
                                 }}
                               >
                                 <Check

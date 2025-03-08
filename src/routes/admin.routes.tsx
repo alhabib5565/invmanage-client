@@ -97,7 +97,7 @@ export const adminPaths: TUserPath[] = [
         icon: PlusCircle,
       },
       {
-        path: ":id/edit-product",
+        path: "edit-product/:id",
         element: <UpdateProduct />,
       },
       {

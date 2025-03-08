@@ -48,6 +48,15 @@ export const productSchema = z.object({
   note: z.string().optional(), // Note is still optional
   images: z.array(z.any()).optional(), // images are still optional
 });
+export const productEditSchema = z.object({
+  productName: z.string().min(1, "Product Name is required"),
+  brand: z.string().min(1, "Brand is required"),
+  category: z.string().min(1, "Category is required"),
+  productUnit: z.string().min(1, "Product Unit is required"),
+  purchaseUnit: z.string().min(1, "Purchase Unit is required"),
+  saleUnit: z.string().min(1, "Sale Unit is required"),
+  note: z.string().optional(),
+});
 
 // Empty Default Value Object
 export const productDefaultValues = {
