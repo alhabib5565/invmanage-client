@@ -20,16 +20,24 @@ import { useFormContext } from "react-hook-form";
 type TMyDatePickerProps = {
   name: string;
   label: string;
+  required?: boolean;
 };
-const MyDatePicker = ({ name, label }: TMyDatePickerProps) => {
+const MyDatePicker = ({ name, label, required = true }: TMyDatePickerProps) => {
   const form = useFormContext();
   return (
     <FormField
       control={form.control}
       name={name}
       render={({ field }) => (
-        <FormItem className="flex flex-col">
-          <FormLabel>{label}</FormLabel>
+        <FormItem>
+          <FormLabel
+            className={cn({
+              "after:content-['*'] after:ml-1 after:text-destructive": required,
+              "after:content-['(optional)'] after:ml-0.5": !required,
+            })}
+          >
+            {label}
+          </FormLabel>
           <Popover>
             <PopoverTrigger asChild>
               <FormControl>

@@ -74,7 +74,9 @@ const Products = () => {
                       {product.productID}
                     </span>
                   </TableCell>
-                  <TableCell>{product.productName}</TableCell>
+                  <TableCell className="max-w-[300px] truncate">
+                    {product.productName}
+                  </TableCell>
                   <TableCell>{product.brand.name}</TableCell>
                   <TableCell>{product.category.name}</TableCell>
 

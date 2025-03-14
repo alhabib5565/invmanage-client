@@ -22,6 +22,8 @@ import EmployeeList from "@/components/pages/dashboard/admin/employee-management
 import CreateProduct from "@/components/pages/dashboard/admin/product/CreateProduct";
 import Products from "@/components/pages/dashboard/admin/product/Products";
 import UpdateProduct from "@/components/pages/dashboard/admin/product/UpdateProduct";
+import CreatePurchase from "@/components/pages/dashboard/admin/purchase/CreatePurchase";
+import PurchaseList from "@/components/pages/dashboard/admin/purchase/PurchaseList";
 import Units from "@/components/pages/dashboard/admin/unit/Units";
 import CreateWarehouse from "@/components/pages/dashboard/admin/warehouse/CreateWarehouse";
 import EditWarehouse from "@/components/pages/dashboard/admin/warehouse/EditWarehouse";
@@ -44,6 +46,7 @@ import {
   Clipboard,
   List,
   PlusCircle,
+  ArrowLeft,
 } from "lucide-react";
 
 export const adminPaths: TUserPath[] = [
@@ -159,31 +162,30 @@ export const adminPaths: TUserPath[] = [
     path: ":id/edit-warehouse",
     element: <EditWarehouse />,
   },
+
   {
-    name: "Book Management",
-    icon: Book,
+    name: "Purchase",
+    icon: ShoppingBag,
     children: [
       {
-        name: "Create Book",
-        path: "create-book",
-        element: <CreateBook />,
-        icon: PlusCircle,
+        name: "Purchase List",
+        path: "purchase-list",
+        element: <PurchaseList />,
+        icon: List,
       },
       {
-        name: "Book List",
-        path: "book-list",
-        element: <BookList />,
-        icon: Book,
+        name: "Return Purchase",
+        path: "return-purchase",
+        element: <h2>return purchase</h2>,
+        icon: ArrowLeft,
       },
       {
-        name: "Book Stock",
-        path: "book-stock",
-        element: <BookStock />,
-        icon: Box,
+        path: "create-purchase",
+        element: <CreatePurchase />,
       },
       {
-        path: ":id/edit-book",
-        element: <EditBook />,
+        path: ":id/edit-purchase",
+        element: <>eidt purchase</>,
       },
     ],
   },
@@ -219,6 +221,34 @@ export const adminPaths: TUserPath[] = [
         name: "Sale Entry",
         path: "sale-entry",
         element: <SaleEntry />,
+      },
+    ],
+  },
+  {
+    name: "Book Management",
+    icon: Book,
+    children: [
+      {
+        name: "Create Book",
+        path: "create-book",
+        element: <CreateBook />,
+        icon: PlusCircle,
+      },
+      {
+        name: "Book List",
+        path: "book-list",
+        element: <BookList />,
+        icon: Book,
+      },
+      {
+        name: "Book Stock",
+        path: "book-stock",
+        element: <BookStock />,
+        icon: Box,
+      },
+      {
+        path: ":id/edit-book",
+        element: <EditBook />,
       },
     ],
   },

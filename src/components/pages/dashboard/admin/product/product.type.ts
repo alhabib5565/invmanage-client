@@ -1,3 +1,4 @@
+import { TBaseUnits } from "../base-unit/baseUnits.type";
 import { TBrand } from "../brand/brand.type";
 import { TCategory } from "../category/category.type";
 
@@ -6,16 +7,21 @@ export type TImage = {
   public_id: string;
 };
 
+export type TStock = { warehouse: string; quantity: number };
+
 export interface TProduct {
   _id: string;
   productName: string;
   slug: string;
   productID: string;
+  code: string;
   stockAlert: number;
+  stock: TStock[];
   brand: TBrand;
   category: TCategory;
   tax: number;
-  productUnit: string;
+  discount?: number;
+  productUnit: TBaseUnits;
   purchaseUnit: string;
   saleUnit: string;
   productCost: number;
