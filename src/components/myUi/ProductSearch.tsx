@@ -9,17 +9,17 @@ import { TProductItemWithQuanity } from "../pages/dashboard/admin/purchase/purch
 import useDebounce from "@/hooks/useDebounce";
 import { useGetAllProductsQuery } from "@/redux/api/admin/product.api";
 
-type TMyAutoCompleteProps = {
+type TProductSearchProps = {
   setSelectedProduct: React.Dispatch<
     React.SetStateAction<TProductItemWithQuanity[]>
   >;
   selectedProduct: TProductItemWithQuanity[];
 };
 
-const MyAutoComplete = ({
+const ProductSearch = ({
   setSelectedProduct,
   selectedProduct,
-}: TMyAutoCompleteProps) => {
+}: TProductSearchProps) => {
   const [inputValue, setInputValue] = useState("");
   const searchTerm = useDebounce({ value: inputValue });
 
@@ -75,7 +75,7 @@ const MyAutoComplete = ({
   );
 };
 
-export default MyAutoComplete;
+export default ProductSearch;
 
 /**
  * const totalTax = (item.productPrice / 100) * item.tax;

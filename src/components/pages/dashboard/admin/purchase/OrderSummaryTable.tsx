@@ -1,0 +1,50 @@
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { TOrderSummary } from "./CreatePurchase";
+import { TProductItemWithQuanity } from "./purchase.type";
+import { calculateProductTotals } from "./purcase.utils";
+
+const OrderSummaryTable = ({
+  orderSummary,
+  selectedProduct,
+}: {
+  orderSummary: TOrderSummary;
+  selectedProduct: TProductItemWithQuanity[];
+}) => {
+  const sumOfAllSubTotal = selectedProduct.reduce((prev, current) => {
+    const { subTotal } = calculateProductTotals(current);
+    return (prev += subTotal);
+  }, 0);
+
+  const totalTax = (sumOfAllSubTotal / 100) * orderSummary.taxRate;
+
+  const grandTotal =
+    sumOfAllSubTotal + totalTax + orderSummary.shipping - orderSummary.discount;
+  return (
+    <div className="flex justify-end mt-8">
+      <Table className="border max-w-[400px] w-full">
+        <TableBody>
+          <TableRow>
+            <TableCell className="font-medium">Tax Rate</TableCell>
+            <TableCell>
+              TK {totalTax} ({orderSummary.taxRate}) %
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="font-medium">Discount</TableCell>
+            <TableCell>{orderSummary.discount}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="font-medium">Shipping</TableCell>
+            <TableCell>{orderSummary.shipping}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="font-medium">Grand Total</TableCell>
+            <TableCell>{grandTotal}</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </div>
+  );
+};
+
+export default OrderSummaryTable;

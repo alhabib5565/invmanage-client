@@ -14,11 +14,6 @@ export type TPurchaseProductItem = {
   subTotal: number;
 };
 
-export type TPurchaseProductItemWithProduct = TProduct & {
-  taxRate: number;
-  taxAmount: number;
-  discountAmount: number;
+export type TProductItemWithQuanity = TProduct & {
   quantity: number;
-  subTotal: number;
-  netUnitPrice: number;
 };

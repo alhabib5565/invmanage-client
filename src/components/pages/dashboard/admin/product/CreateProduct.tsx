@@ -64,6 +64,7 @@ const CreateProduct = () => {
         >
           <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             <MyInput name="productName" label="Product Name" type="text" />
+            <MyInput name="code" label="Product Code" type="text" />
 
             <MySelect
               name="brand"
@@ -104,6 +105,28 @@ const CreateProduct = () => {
               placeholder="Choose Sale Unit"
               disabled={!productUnit}
             />
+            <MySelect
+              name="taxType"
+              label="Tax Type"
+              isSuggestion={false}
+              options={[
+                {
+                  label: "Inclusive",
+                  value: "inclusive",
+                },
+                {
+                  label: "Exclusive",
+                  value: "exclusive",
+                },
+              ]}
+              placeholder="Choose Tax Type"
+            />
+            <MyInput
+              name="stockAlert"
+              label="Stock alert"
+              placeholder="Enter Stock Alert"
+              type="number"
+            />
             <MyInputWithSuffix
               name="productCost"
               label="Product Cost"
@@ -122,30 +145,13 @@ const CreateProduct = () => {
               suffix="%"
               placeholder="Enter Order Tax"
             />
-
-            <MySelect
-              name="taxType"
-              label="Tax Type"
-              isSuggestion={false}
-              options={[
-                {
-                  label: "Inclusive",
-                  value: "inclusive",
-                },
-                {
-                  label: "exclusive",
-                  value: "Exclusive",
-                },
-              ]}
-              placeholder="Choose Tax Type"
+            <MyInputWithSuffix
+              name="unitDiscount"
+              label="Unit Discount"
+              suffix="TK"
+              placeholder="Enter Discount"
             />
-            <MyInput
-              name="stockAlert"
-              label="Stock alert"
-              placeholder="Enter Stock Alert"
-              type="number"
-            />
-
+            <div></div>
             <div className="col-span-1 lg:col-span-2">
               <MyTextarea name="note" label="Note" rows={2} required={false} />
             </div>

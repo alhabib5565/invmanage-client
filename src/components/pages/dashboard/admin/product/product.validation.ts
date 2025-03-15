@@ -3,6 +3,7 @@ import * as z from "zod";
 // Zod Validation Schema with all fields required
 export const productSchema = z.object({
   productName: z.string().min(1, { message: "Product name is required" }),
+  code: z.string().min(1, { message: "Product Code is required" }),
   brand: z.string().min(1, { message: "Brand is required" }),
   category: z.string().min(1, { message: "Category is required" }),
   productUnit: z.string().min(1, { message: "Product unit is required" }),
@@ -35,7 +36,22 @@ export const productSchema = z.object({
       message: "Tax must be a number greater than or equal to 0",
     }
   ),
-  taxType: z.enum(["inclusive", "Exclusive"]),
+  unitDiscount: z
+    .string()
+    .optional()
+    .refine(
+      (val) => {
+        if (val === undefined || val === null || val === "") {
+          return true;
+        }
+        const parsed = parseFloat(val);
+        return !isNaN(parsed) && parsed >= 0;
+      },
+      {
+        message: "Tax must be a number greater than or equal to 0",
+      }
+    ),
+  taxType: z.enum(["inclusive", "exclusive"]),
   stockAlert: z.string().refine(
     (val) => {
       const parsed = parseFloat(val);
@@ -61,6 +77,7 @@ export const productEditSchema = z.object({
 // Empty Default Value Object
 export const productDefaultValues = {
   productName: "",
+  code: "",
   brand: "",
   category: "",
   productUnit: "",
@@ -68,6 +85,7 @@ export const productDefaultValues = {
   saleUnit: "",
   productCost: "",
   productPrice: "",
+  unitDiscount: "",
   tax: "",
   taxType: "inclusive", // or "Exclusive" depending on your default
   stockAlert: "",
