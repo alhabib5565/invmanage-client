@@ -61,7 +61,6 @@ const SelectedProductTable = ({
             <TableHead>Discount</TableHead>
             <TableHead>Tax</TableHead>
             <TableHead>Sub Total</TableHead>
-            <TableHead>tax (t/r)</TableHead>
 
             <TableHead className="text-center">Action</TableHead>
           </TableRow>
@@ -123,16 +122,15 @@ const SelectedProductTable = ({
                   </div>
                 </TableCell>
 
-                <TableCell>{product?.discount || "0.0"} TK</TableCell>
-                <TableCell>{taxAmount} TK</TableCell>
+                <TableCell>{product?.discountAmount || "0.0"} TK</TableCell>
+                <TableCell>
+                  ({product.productTaxRate}%) {taxAmount} TK
+                </TableCell>
                 <TableCell>
                   {subTotal}
                   TK
                 </TableCell>
-                <TableCell>
-                  {product.taxType} {product.tax}
-                  TK
-                </TableCell>
+
                 <TableCell>
                   <Button
                     variant="ghost"

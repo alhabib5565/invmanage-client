@@ -19,24 +19,28 @@ import { toast } from "sonner";
 import MyInputWithSuffix from "@/components/from/MyInputWithSuffix";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { defaultPurchaseValues, purchaseSchema } from "./purchase.validation";
+import { useCreatePurchaseMutation } from "@/redux/api/admin/purchase.api";
 
 export type TOrderSummary = {
   taxRate: number;
-  discount: number;
+  discountAmount: number;
   shipping: number;
 };
 
 const CreatePurchase = () => {
+  // states
   const [selectedProduct, setSelectedProduct] = useState<
     TProductItemWithQuanity[]
   >([]);
   const [orderSummary, setOrderSummary] = useState({
     taxRate: 0,
-    discount: 0,
+    discountAmount: 0,
     shipping: 0,
   });
 
-  const onSubmit = (value: FieldValues) => {
+  const [createPurchase, { isLoading }] = useCreatePurchaseMutation();
+
+  const onSubmit = async (value: FieldValues) => {
     if (selectedProduct.length < 1) {
       return toast.error("Please add product to purchase list");
     }
@@ -47,6 +51,20 @@ const CreatePurchase = () => {
       ...orderSummary,
     };
     console.log(purchaseDate);
+
+    const toastId = toast.loading("Processing your request...");
+    try {
+      const res = await createPurchase(purchaseDate).unwrap();
+      toast.success(res.message || "Request successful!", {
+        id: toastId,
+      });
+      // navigate("/admin/products");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Request failed. Please try again", {
+        id: toastId,
+      });
+    }
   };
 
   const { warehouseOptions } = useWarehouseOptions();
@@ -136,10 +154,9 @@ const CreatePurchase = () => {
             />
           </div>
           <div className="flex justify-end mt-4">
-            <Button>Save</Button>
-            {/* <Button disabled={isLoading}>
+            <Button disabled={isLoading}>
               {isLoading ? "Saving..." : "Save"}
-            </Button> */}
+            </Button>
           </div>
         </MyForm>
       </div>

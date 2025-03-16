@@ -19,8 +19,8 @@ export interface TProduct {
   stock: TStock[];
   brand: TBrand;
   category: TCategory;
-  tax: number;
-  discount?: number;
+  productTaxRate: number;
+  discountAmount?: number;
   productUnit: TBaseUnits;
   purchaseUnit: string;
   saleUnit: string;

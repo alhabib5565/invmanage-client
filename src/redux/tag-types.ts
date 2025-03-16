@@ -2,6 +2,7 @@ export const tags = {
   User: "User",
   Customer: "Customer",
   BookPurchase: "BookPurchase",
+  Purchase: "Purchase",
   BookSale: "BookSale",
   Book: "Book",
   EmpBookAssign: "EmpBookAssign",

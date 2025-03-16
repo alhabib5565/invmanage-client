@@ -18,7 +18,10 @@ const OrderSummaryTable = ({
   const totalTax = (sumOfAllSubTotal / 100) * orderSummary.taxRate;
 
   const grandTotal =
-    sumOfAllSubTotal + totalTax + orderSummary.shipping - orderSummary.discount;
+    sumOfAllSubTotal +
+    totalTax +
+    orderSummary.shipping -
+    orderSummary.discountAmount;
   return (
     <div className="flex justify-end mt-8">
       <Table className="border max-w-[400px] w-full">
@@ -31,7 +34,7 @@ const OrderSummaryTable = ({
           </TableRow>
           <TableRow>
             <TableCell className="font-medium">Discount</TableCell>
-            <TableCell>{orderSummary.discount}</TableCell>
+            <TableCell>{orderSummary.discountAmount}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="font-medium">Shipping</TableCell>

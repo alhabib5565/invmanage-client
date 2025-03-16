@@ -4,12 +4,17 @@ export const purchaseSchema = z.object({
   purchaseDate: z.date({
     required_error: "Purchase date is required",
   }),
-  warehouse: z.string({
-    required_error: "Warehouse is required",
-  }),
-  supplier: z.string({
-    required_error: "Supplier is required",
-  }),
+  warehouse: z
+    .string({
+      required_error: "Warehouse is required",
+    })
+    .min(1, { message: "Please Select a warehouse" }),
+  supplier: z
+    .string({
+      required_error: "Supplier is required",
+    })
+    .min(1, { message: "Please Select a Supplier" }),
+
   paidAmount: z.string().refine(
     (val) => {
       const parsed = parseFloat(val);

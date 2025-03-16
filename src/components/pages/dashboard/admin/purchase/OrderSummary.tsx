@@ -24,7 +24,7 @@ const OrderSummary = ({ setOrderSummary }: TOrderSummaryProps) => {
 
       <OrderSummaryInput
         updateOrderSummary={updateOrderSummary}
-        name="discount"
+        name="discountAmount"
         label="Discount"
         suffix="TK"
         placeholder="Enter Discount Amount"

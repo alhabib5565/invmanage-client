@@ -1,23 +1,33 @@
 import { TProductItemWithQuanity } from "./purchase.type";
 
 export const calculateProductTotals = (product: TProductItemWithQuanity) => {
-  const { productPrice, quantity, tax, taxType } = product;
-
-  const taxAmount = (productPrice / 100) * tax * quantity; // total tax
-
-  const subTotal =
-    taxType === "inclusive"
-      ? productPrice * quantity
-      : productPrice * quantity + taxAmount;
+  const {
+    productPrice,
+    quantity,
+    productTaxRate = 0,
+    taxType,
+    discountAmount = 0,
+  } = product;
+  const discountedPrice = productPrice - discountAmount;
 
   const netUnitPrice =
     taxType === "inclusive"
-      ? productPrice - (tax * productPrice) / 100
-      : productPrice;
+      ? discountedPrice / (1 + productTaxRate / 100)
+      : discountedPrice;
+  console.log(netUnitPrice);
+  const taxAmount =
+    taxType === "inclusive"
+      ? discountedPrice * quantity - netUnitPrice * quantity
+      : ((netUnitPrice * productTaxRate) / 100) * quantity;
+
+  const subTotal =
+    taxType === "inclusive"
+      ? netUnitPrice * quantity
+      : netUnitPrice * quantity + taxAmount;
 
   return {
-    taxAmount,
-    subTotal,
-    netUnitPrice,
+    taxAmount: parseFloat(taxAmount.toFixed(2)),
+    subTotal: parseFloat(subTotal.toFixed(2)),
+    netUnitPrice: parseFloat(netUnitPrice.toFixed(2)),
   };
 };
