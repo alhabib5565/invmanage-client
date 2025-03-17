@@ -14,16 +14,13 @@ export const calculateProductTotals = (product: TProductItemWithQuanity) => {
     taxType === "inclusive"
       ? discountedPrice / (1 + productTaxRate / 100)
       : discountedPrice;
-  console.log(netUnitPrice);
+
   const taxAmount =
     taxType === "inclusive"
       ? discountedPrice * quantity - netUnitPrice * quantity
       : ((netUnitPrice * productTaxRate) / 100) * quantity;
 
-  const subTotal =
-    taxType === "inclusive"
-      ? netUnitPrice * quantity
-      : netUnitPrice * quantity + taxAmount;
+  const subTotal = netUnitPrice * quantity + taxAmount;
 
   return {
     taxAmount: parseFloat(taxAmount.toFixed(2)),

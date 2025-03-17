@@ -15,7 +15,10 @@ const OrderSummaryTable = ({
     return (prev += subTotal);
   }, 0);
 
-  const totalTax = (sumOfAllSubTotal / 100) * orderSummary.taxRate;
+  const totalTax =
+    (sumOfAllSubTotal - orderSummary?.discountAmount) *
+    (orderSummary.taxRate / 100);
+  // const totalTax = (sumOfAllSubTotal / 100) * orderSummary.taxRate;
 
   const grandTotal =
     sumOfAllSubTotal +
