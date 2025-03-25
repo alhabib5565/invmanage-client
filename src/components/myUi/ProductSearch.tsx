@@ -46,7 +46,10 @@ const ProductSearch = ({
     if (isProductAlreadySelected) {
       return toast.error("This product already selected");
     } else {
-      setSelectedProduct((prevItem) => [...prevItem, { ...item, quantity: 1 }]);
+      setSelectedProduct((prevItem) => [
+        ...prevItem,
+        { ...item, quantity: 1, product: item._id },
+      ]);
     }
   };
 

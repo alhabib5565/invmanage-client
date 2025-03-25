@@ -1,13 +1,14 @@
 import { TProduct } from "../product/product.type";
 
 export type TPurchaseProductItem = {
-  name: string;
+  productName: string;
   code: string;
   product: string;
   productCost: number;
+  productPrice: number;
   netUnitPrice: number;
   taxType: "inclusive" | "exclusive";
-  taxRate: number;
+  productTaxRate: number;
   taxAmount: number;
   discountAmount: number;
   quantity: number;
@@ -16,4 +17,24 @@ export type TPurchaseProductItem = {
 
 export type TProductItemWithQuanity = TProduct & {
   quantity: number;
+};
+
+export type TPurchase = {
+  _id: string;
+  purchaseDate: string;
+  purchaseId: string;
+  warehouse: string;
+  supplier: string;
+  discountAmount: number;
+  shipping: number;
+  taxRate: number;
+  taxAmount: number;
+  items: TPurchaseProductItem[];
+  totalPurchaseAmount: number;
+  paidAmount: number;
+  dueAmount: number;
+  paymentMethod: string;
+  paymentStatus: string;
+  createdAt: string;
+  updatedAt: string;
 };

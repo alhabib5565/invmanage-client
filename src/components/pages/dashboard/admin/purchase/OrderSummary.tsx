@@ -3,9 +3,14 @@ import { Label } from "@/components/ui/label";
 import { TOrderSummary } from "./CreatePurchase";
 
 type TOrderSummaryProps = {
+  orderSummary: TOrderSummary;
   setOrderSummary: React.Dispatch<React.SetStateAction<TOrderSummary>>;
 };
-const OrderSummary = ({ setOrderSummary }: TOrderSummaryProps) => {
+const OrderSummary = ({
+  setOrderSummary,
+  orderSummary,
+}: TOrderSummaryProps) => {
+  console.log(orderSummary);
   const updateOrderSummary = (field: string, value: number) => {
     setOrderSummary((prevOrderSummary) => ({
       ...prevOrderSummary,
@@ -19,6 +24,7 @@ const OrderSummary = ({ setOrderSummary }: TOrderSummaryProps) => {
         name="taxRate"
         label="Tax Rate"
         suffix="%"
+        value={orderSummary.taxRate}
         placeholder="Enter Tax Rate"
       />
 
@@ -27,6 +33,7 @@ const OrderSummary = ({ setOrderSummary }: TOrderSummaryProps) => {
         name="discountAmount"
         label="Discount"
         suffix="TK"
+        value={orderSummary.discountAmount}
         placeholder="Enter Discount Amount"
       />
       <OrderSummaryInput
@@ -34,6 +41,7 @@ const OrderSummary = ({ setOrderSummary }: TOrderSummaryProps) => {
         name="shipping"
         label="Shipping"
         suffix="TK"
+        value={orderSummary.shipping}
         placeholder="Enter Shipping Charge"
       />
     </div>
@@ -47,6 +55,7 @@ const OrderSummaryInput = ({
   label,
   placeholder,
   name,
+  value,
   suffix,
 }: {
   updateOrderSummary: (field: string, value: number) => void;
@@ -54,12 +63,14 @@ const OrderSummaryInput = ({
   placeholder: string;
   name: string;
   suffix: string;
+  value: number;
 }) => {
   return (
     <div className="space-y-2">
       <Label>{label}</Label>
       <div className="flex">
         <Input
+          value={value}
           onChange={(e) => updateOrderSummary(name, Number(e.target.value))}
           type="number"
           className="bg-transparent rounded-r-none"

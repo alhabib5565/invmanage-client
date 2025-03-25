@@ -27,7 +27,7 @@ const SelectedProductTable = ({
   ) => {
     const alreadySelectedProducts = [...selectedProduct];
 
-    const product = alreadySelectedProducts.find(
+    const product = alreadySelectedProducts?.find(
       (product) => product._id === productItem._id
     );
     if (!product) return;
@@ -89,7 +89,7 @@ const SelectedProductTable = ({
                 <TableCell>{product.productCost} TK</TableCell>
                 <TableCell>
                   <Badge className="bg-[#fff1d3] text-[#ffb821]">
-                    {product?.stock.reduce((prevValue, currentValue) => {
+                    {product?.stock?.reduce((prevValue, currentValue) => {
                       return (prevValue += currentValue.quantity);
                     }, 0)}
                     {product.productUnit.name}

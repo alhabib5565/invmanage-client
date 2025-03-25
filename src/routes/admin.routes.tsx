@@ -23,6 +23,7 @@ import CreateProduct from "@/components/pages/dashboard/admin/product/CreateProd
 import Products from "@/components/pages/dashboard/admin/product/Products";
 import UpdateProduct from "@/components/pages/dashboard/admin/product/UpdateProduct";
 import CreatePurchase from "@/components/pages/dashboard/admin/purchase/CreatePurchase";
+import EditPurchase from "@/components/pages/dashboard/admin/purchase/EditPurchase";
 import PurchaseList from "@/components/pages/dashboard/admin/purchase/PurchaseList";
 import Units from "@/components/pages/dashboard/admin/unit/Units";
 import CreateWarehouse from "@/components/pages/dashboard/admin/warehouse/CreateWarehouse";
@@ -185,7 +186,7 @@ export const adminPaths: TUserPath[] = [
       },
       {
         path: ":id/edit-purchase",
-        element: <>eidt purchase</>,
+        element: <EditPurchase />,
       },
     ],
   },

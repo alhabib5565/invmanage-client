@@ -1,3 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  useEditPurchasesMutation,
+  useGetSinglePurchasesQuery,
+} from "@/redux/api/admin/purchase.api";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import MyDatePicker from "@/components/from/MyDatePicker";
 import MyForm from "@/components/from/MyForm";
 import MySelect from "@/components/from/MySelect";
@@ -6,7 +13,6 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import useCustomerOptions from "@/hooks/useCustomerOptions";
 import useWarehouseOptions from "@/hooks/useWarehouseOptons";
-import { useState } from "react";
 import { FieldValues } from "react-hook-form";
 
 import { TProductItemWithQuanity } from "./purchase.type";
@@ -14,20 +20,14 @@ import SelectedProductTable from "./SelectedProductTable";
 import ProductSearch from "@/components/myUi/ProductSearch";
 
 import OrderSummaryTable from "./OrderSummaryTable";
-import { toast } from "sonner";
 import MyInputWithSuffix from "@/components/from/MyInputWithSuffix";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { defaultPurchaseValues, purchaseSchema } from "./purchase.validation";
-import { useCreatePurchaseMutation } from "@/redux/api/admin/purchase.api";
+import { purchaseSchema } from "./purchase.validation";
+import Loading from "@/components/shared/Loading";
 import MyInputSuffixWithWatch from "@/components/from/MyInputSuffixWithWatch";
+import { toast } from "sonner";
 
-export type TOrderSummary = {
-  taxRate: number;
-  discountAmount: number;
-  shipping: number;
-};
-
-const CreatePurchase = () => {
+const EditPurchase = () => {
   // states
   const [selectedProduct, setSelectedProduct] = useState<
     TProductItemWithQuanity[]
@@ -36,7 +36,27 @@ const CreatePurchase = () => {
   const [taxRate, setTaxRate] = useState(0);
   const [shipping, setShipping] = useState(0);
 
-  const [createPurchase, { isLoading }] = useCreatePurchaseMutation();
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  const { data, isLoading } = useGetSinglePurchasesQuery(id);
+  const [editPurchase, { isLoading: editLoading }] = useEditPurchasesMutation();
+
+  const purchaseData = data?.data;
+
+  useEffect(() => {
+    if (purchaseData?.items?.length > 0) {
+      const items = purchaseData?.items?.map((item: any) => ({
+        ...item.product,
+        quantity: item.quantity,
+        product: item?.product?._id,
+      }));
+      setSelectedProduct([...items]);
+    }
+  }, [purchaseData]);
+
+  const { warehouseOptions } = useWarehouseOptions();
+  const { customerOptions } = useCustomerOptions(); // it will replace with supplier options
 
   const onSubmit = async (value: FieldValues) => {
     if (selectedProduct.length < 1) {
@@ -45,17 +65,20 @@ const CreatePurchase = () => {
 
     const purchaseDate = {
       ...value,
+      discountAmount: Number(value.discountAmount),
+      taxRate: Number(value.taxRate),
+      shipping: Number(value.shipping),
       items: [...selectedProduct],
     };
     console.log(purchaseDate);
 
     const toastId = toast.loading("Processing your request...");
     try {
-      const res = await createPurchase(purchaseDate).unwrap();
+      const res = await editPurchase({ data: purchaseDate, id: id }).unwrap();
       toast.success(res.message || "Request successful!", {
         id: toastId,
       });
-      // navigate("/admin/products");
+      navigate("/admin/purchase-list");
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error?.data?.message || "Request failed. Please try again", {
@@ -64,8 +87,15 @@ const CreatePurchase = () => {
     }
   };
 
-  const { warehouseOptions } = useWarehouseOptions();
-  const { customerOptions } = useCustomerOptions(); // it will replace with supplier options
+  if (isLoading) {
+    return <Loading />;
+  }
+  const defaultPurchaseValues = {
+    ...purchaseData,
+    discountAmount: String(purchaseData?.discountAmount),
+    shipping: String(purchaseData?.shipping),
+    paidAmount: String(purchaseData?.paidAmount),
+  };
 
   return (
     <div className="space-y-6">
@@ -154,7 +184,7 @@ const CreatePurchase = () => {
             />
             <MyInputWithSuffix
               name="paidAmount"
-              label="Paid Amount*"
+              label="Paid Amount"
               suffix="TK"
               placeholder="Enter Total Paid Amount"
             />
@@ -180,8 +210,8 @@ const CreatePurchase = () => {
             />
           </div>
           <div className="flex justify-end mt-4">
-            <Button disabled={isLoading}>
-              {isLoading ? "Saving..." : "Save"}
+            <Button disabled={editLoading}>
+              {editLoading ? "Updating..." : "Update"}
             </Button>
           </div>
         </MyForm>
@@ -190,32 +220,4 @@ const CreatePurchase = () => {
   );
 };
 
-export default CreatePurchase;
-
-/**
- * const handleUpdateQuantity = (
-    porductItem: TPurchaseProductItemWithProduct,
-    quantityUpdateType: "add" | "minus"
-  ) => {
-    const alreadySelectedProducts = [...selectedProduct];
-
-    const product = alreadySelectedProducts.find(
-      (product) => product._id === porductItem._id
-    );
-    if (!product) return;
-
-    const newQuantity =
-      quantityUpdateType === "add"
-        ? product.quantity + 1
-        : Math.max(1, product.quantity - 1);
-
-    product.quantity = newQuantity;
-
-    product.taxAmount = product.quantity * product.tax;
-    product.subTotal =
-      product.quantity * (product.netUnitPrice + product.taxRate);
-
-    setSelectedProduct(alreadySelectedProducts);
-  };
-
- */
+export default EditPurchase;

@@ -10,7 +10,7 @@ const OrderSummaryTable = ({
   orderSummary: TOrderSummary;
   selectedProduct: TProductItemWithQuanity[];
 }) => {
-  const sumOfAllSubTotal = selectedProduct.reduce((prev, current) => {
+  const sumOfAllSubTotal = selectedProduct?.reduce((prev, current) => {
     const { subTotal } = calculateProductTotals(current);
     return (prev += subTotal);
   }, 0);
@@ -18,7 +18,6 @@ const OrderSummaryTable = ({
   const totalTax =
     (sumOfAllSubTotal - orderSummary?.discountAmount) *
     (orderSummary.taxRate / 100);
-  // const totalTax = (sumOfAllSubTotal / 100) * orderSummary.taxRate;
 
   const grandTotal =
     sumOfAllSubTotal +
