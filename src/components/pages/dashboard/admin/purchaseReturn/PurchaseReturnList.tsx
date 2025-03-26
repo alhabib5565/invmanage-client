@@ -2,32 +2,22 @@ import PageHeader from "@/components/shared/PageHeader";
 import { Input } from "@/components/ui/input";
 import {
   Table,
-  TableBody,
-  TableCell,
+  //   TableBody,
+  //   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import MyPagination from "@/components/myUi/MyPagination";
-import { Eye, PenSquare, Trash2 } from "lucide-react";
-import { deleteConfirmation } from "@/utils/deleteConfirmation";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import {
-  useDeletePurchaseMutation,
-  useGetAllPurchasesQuery,
-} from "@/redux/api/admin/purchase.api";
-import Loading from "@/components/shared/Loading";
-import { TPurchase } from "./purchase.type";
-import { Badge } from "@/components/ui/badge";
+// import { Eye, PenSquare, Trash2 } from "lucide-react";
+// import { deleteConfirmation } from "@/utils/deleteConfirmation";
+// import { Button } from "@/components/ui/button";
+// import { Link } from "react-router-dom";
 
-const PurchaseList = () => {
-  const { data, isLoading } = useGetAllPurchasesQuery({});
-  const [deletePurchase] = useDeletePurchaseMutation();
-  if (isLoading) return <Loading />;
+const PurchaseReturnList = () => {
   return (
     <div className="space-y-6">
-      <PageHeader createBtnPaht="/admin/create-purchase" />
+      <PageHeader createBtnPaht="/admin/create-purchase-retrun" />
       <div className="p-6 border rounded-[16px] space-y-4 bg-white">
         <div className="pb-4 flex justify-end gap-4 ">
           <Input placeholder="Search..." className="w-fit" />
@@ -48,7 +38,7 @@ const PurchaseList = () => {
                 <TableHead className="text-center">Action</TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody>
+            {/* <TableBody>
               {data?.data.map((purchase: TPurchase) => (
                 <TableRow key={purchase._id}>
                   <TableCell>
@@ -110,7 +100,7 @@ const PurchaseList = () => {
                   </TableCell>
                 </TableRow>
               ))}
-            </TableBody>
+            </TableBody> */}
           </Table>
         </div>
         <div className="px-6 py-4 flex justify-end">
@@ -121,4 +111,4 @@ const PurchaseList = () => {
   );
 };
 
-export default PurchaseList;
+export default PurchaseReturnList;

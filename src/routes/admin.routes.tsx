@@ -1,12 +1,15 @@
-import AdminBookSaleList from "@/components/pages/dashboard/admin/admin-book-sale/AdminBookSaleList";
 import AdminDashboardHome from "@/components/pages/dashboard/admin/admin-dashboard-home/AdminDashboardHome";
 import BaseUnits from "@/components/pages/dashboard/admin/base-unit/BaseUnits";
-import BookPurchaseList from "@/components/pages/dashboard/admin/book-purchase/BookPurchaseList";
-import CreateBookPurchase from "@/components/pages/dashboard/admin/book-purchase/CreateBookPurchase";
-import BookList from "@/components/pages/dashboard/admin/book/BookList";
-import BookStock from "@/components/pages/dashboard/admin/book/BookStock";
-import CreateBook from "@/components/pages/dashboard/admin/book/CreateBook";
-import EditBook from "@/components/pages/dashboard/admin/book/EditBook";
+// import BookPurchaseList from "@/components/pages/dashboard/admin/book-purchase/BookPurchaseList";
+// import CreateBookPurchase from "@/components/pages/dashboard/admin/book-purchase/CreateBookPurchase";
+// import AdminBookSaleList from "@/components/pages/dashboard/admin/admin-book-sale/AdminBookSaleList";
+// import BookList from "@/components/pages/dashboard/admin/book/BookList";
+// import BookStock from "@/components/pages/dashboard/admin/book/BookStock";
+// import CreateBook from "@/components/pages/dashboard/admin/book/CreateBook";
+// import AssignBookToEmp from "@/components/pages/dashboard/admin/empBookAssign/AssignBookToEmp";
+// import BookAssignList from "@/components/pages/dashboard/admin/empBookAssign/BookAssignList";
+// import SaleEntry from "@/components/shared/saleEntry/SaleEntry";
+// import EditBook from "@/components/pages/dashboard/admin/book/EditBook";
 import Brands from "@/components/pages/dashboard/admin/brand/Brands";
 import CreateBrand from "@/components/pages/dashboard/admin/brand/CreateBrand";
 import UpdateBrand from "@/components/pages/dashboard/admin/brand/UpdateBrand";
@@ -14,8 +17,6 @@ import Categories from "@/components/pages/dashboard/admin/category/Categories";
 import CreateCategory from "@/components/pages/dashboard/admin/category/CreateCategory";
 import EditCategory from "@/components/pages/dashboard/admin/category/EditCategory";
 import Customers from "@/components/pages/dashboard/admin/customer-management/Customers";
-import AssignBookToEmp from "@/components/pages/dashboard/admin/empBookAssign/AssignBookToEmp";
-import BookAssignList from "@/components/pages/dashboard/admin/empBookAssign/BookAssignList";
 import CreateEmployee from "@/components/pages/dashboard/admin/employee-management/CreateEmployee";
 import EditEmployeeInfo from "@/components/pages/dashboard/admin/employee-management/EditEmployeeInfo";
 import EmployeeList from "@/components/pages/dashboard/admin/employee-management/EmployeeList";
@@ -25,15 +26,14 @@ import UpdateProduct from "@/components/pages/dashboard/admin/product/UpdateProd
 import CreatePurchase from "@/components/pages/dashboard/admin/purchase/CreatePurchase";
 import EditPurchase from "@/components/pages/dashboard/admin/purchase/EditPurchase";
 import PurchaseList from "@/components/pages/dashboard/admin/purchase/PurchaseList";
+import CreatePurchaseRetrun from "@/components/pages/dashboard/admin/purchaseReturn/CreatePurchaseRetrun";
+import PurchaseReturnList from "@/components/pages/dashboard/admin/purchaseReturn/PurchaseReturnList";
 import Units from "@/components/pages/dashboard/admin/unit/Units";
 import CreateWarehouse from "@/components/pages/dashboard/admin/warehouse/CreateWarehouse";
 import EditWarehouse from "@/components/pages/dashboard/admin/warehouse/EditWarehouse";
 import Warehouse from "@/components/pages/dashboard/admin/warehouse/Warehouse";
-import SaleEntry from "@/components/shared/saleEntry/SaleEntry";
 import { TUserPath } from "@/type/routesAndSidebarItems.type";
 import {
-  Book,
-  DollarSign,
   WarehouseIcon,
   LayoutDashboard,
   User,
@@ -44,7 +44,6 @@ import {
   Tag,
   Ruler,
   ShoppingBag,
-  Clipboard,
   List,
   PlusCircle,
   ArrowLeft,
@@ -175,12 +174,6 @@ export const adminPaths: TUserPath[] = [
         icon: List,
       },
       {
-        name: "Return Purchase",
-        path: "return-purchase",
-        element: <h2>return purchase</h2>,
-        icon: ArrowLeft,
-      },
-      {
         path: "create-purchase",
         element: <CreatePurchase />,
       },
@@ -188,9 +181,21 @@ export const adminPaths: TUserPath[] = [
         path: ":id/edit-purchase",
         element: <EditPurchase />,
       },
+      {
+        name: "Return Purchase",
+        path: "purchase-return-list",
+        element: <PurchaseReturnList />,
+        icon: ArrowLeft,
+      },
+      {
+        path: "create-purchase-retrun",
+        element: <CreatePurchaseRetrun />,
+      },
     ],
   },
-  {
+
+  /**
+   {
     name: "Book Purchase",
     icon: ShoppingBag,
     children: [
@@ -208,7 +213,7 @@ export const adminPaths: TUserPath[] = [
       },
     ],
   },
-  {
+   {
     name: "Admin Book Sale",
     icon: DollarSign,
     children: [
@@ -271,6 +276,7 @@ export const adminPaths: TUserPath[] = [
       },
     ],
   },
+ */
 ];
 
 // before modify icon

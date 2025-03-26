@@ -22,8 +22,9 @@ const purchaseApi = baseApi.injectEndpoints({
     }),
 
     getAllPurchases: builder.query({
-      query: () => ({
+      query: (params) => ({
         url: "/purchases",
+        params,
       }),
       providesTags: [tags.Purchase],
     }),
