@@ -68,7 +68,7 @@ const BaseUnits = () => {
                       {/* <button>
                         <Eye className="text-green-500 size-5 stroke-[2.8px]" />
                       </button> */}
-                      <EditBaseUnitModal id={baseUnit.slug} />
+                      <EditBaseUnitModal data={baseUnit} />
                       <Button
                         variant="ghost"
                         size="icon"

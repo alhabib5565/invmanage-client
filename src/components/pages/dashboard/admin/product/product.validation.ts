@@ -27,7 +27,7 @@ export const productSchema = z.object({
       message: "Product price must be a number greater than 0",
     }
   ),
-  tax: z.string().refine(
+  productTaxRate: z.string().refine(
     (val) => {
       const parsed = parseFloat(val);
       return !isNaN(parsed) && parsed >= 0; // Check if it's a number and greater than or equal to 0
@@ -36,7 +36,7 @@ export const productSchema = z.object({
       message: "Tax must be a number greater than or equal to 0",
     }
   ),
-  unitDiscount: z
+  discountAmount: z
     .string()
     .optional()
     .refine(
@@ -85,8 +85,8 @@ export const productDefaultValues = {
   saleUnit: "",
   productCost: "",
   productPrice: "",
-  unitDiscount: "",
-  tax: "",
+  discountAmount: "",
+  productTaxRate: "",
   taxType: "inclusive", // or "Exclusive" depending on your default
   stockAlert: "",
   note: "",

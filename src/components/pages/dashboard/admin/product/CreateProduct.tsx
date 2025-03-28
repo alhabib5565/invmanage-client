@@ -140,13 +140,13 @@ const CreateProduct = () => {
               placeholder="Enter Sell Price"
             />
             <MyInputWithSuffix
-              name="tax"
-              label="Tax"
+              name="productTaxRate"
+              label="Tax Rate"
               suffix="%"
               placeholder="Enter Order Tax"
             />
             <MyInputWithSuffix
-              name="unitDiscount"
+              name="discountAmount"
               label="Unit Discount"
               suffix="TK"
               placeholder="Enter Discount"

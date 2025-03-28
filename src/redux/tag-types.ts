@@ -3,6 +3,7 @@ export const tags = {
   Customer: "Customer",
   BookPurchase: "BookPurchase",
   Purchase: "Purchase",
+  PurchaseRetrun: "PurchaseRetrun",
   BookSale: "BookSale",
   Book: "Book",
   EmpBookAssign: "EmpBookAssign",

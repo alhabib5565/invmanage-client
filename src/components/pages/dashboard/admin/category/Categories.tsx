@@ -57,12 +57,12 @@ const Categories = () => {
             <Button>Filter</Button>
           </div>
         </div>
-        <div>
+        <div className="relative h-fit max-h-[500px] overflow-y-scroll">
           <Table className="border-b">
-            <TableHeader className="bg-secondary">
+            <TableHeader className="bg-secondary sticky top-0 z-10">
               <TableRow>
                 <TableHead className=" text-primary font-medium">
-                  Book ID
+                  Slug
                 </TableHead>
                 <TableHead className="text-primary">Name</TableHead>
                 <TableHead className="text-primary">Description</TableHead>

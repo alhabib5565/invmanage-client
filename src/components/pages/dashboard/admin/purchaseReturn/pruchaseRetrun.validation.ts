@@ -1,7 +1,7 @@
 import * as z from "zod";
 
 export const purchaseRetrunSchema = z.object({
-  purchaseRetrunDate: z.date({
+  returnDate: z.date({
     required_error: "Date is required",
   }),
 
@@ -9,7 +9,7 @@ export const purchaseRetrunSchema = z.object({
   supplier: z.string({ required_error: "Please select a supplier" }),
 });
 export const defaultPurchaseRetrunValues = {
-  purchaseRetrunDate: new Date(),
+  returnDate: new Date(),
   warehouse: "",
   supplier: "",
 };

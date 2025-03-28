@@ -1,10 +1,7 @@
 import MyForm from "@/components/from/MyForm";
 import MyModal from "@/components/shared/MyModal";
 import { Button } from "@/components/ui/button";
-import {
-  useEditBaseUnitMutation,
-  useGetSingleBaseUnitQuery,
-} from "@/redux/api/admin/baseUnit.api";
+import { useEditBaseUnitMutation } from "@/redux/api/admin/baseUnit.api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PenSquare } from "lucide-react";
 import { useState } from "react";
@@ -13,20 +10,18 @@ import { toast } from "sonner";
 import { baseUnitFormSchema } from "./baseUnit.validation";
 import MyInput from "@/components/from/MyInput";
 import MyTextarea from "@/components/from/MyTextarea";
-import Loading from "@/components/shared/Loading";
+import { TBaseUnits } from "./baseUnits.type";
 
-const EditBaseUnitModal = ({ id }: { id: string }) => {
+const EditBaseUnitModal = ({ data }: { data: TBaseUnits }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [editBaseUnit, { isLoading: isEditLoading }] =
     useEditBaseUnitMutation();
 
-  const { data, isLoading } = useGetSingleBaseUnitQuery(id);
-  if (isLoading) return <Loading />;
   console.log(data);
   const onSubmit = async (value: FieldValues) => {
     const toastId = toast.loading("Processing your request...");
     try {
-      const res = await editBaseUnit({ data: value, id }).unwrap();
+      const res = await editBaseUnit({ data: value, id: data.slug }).unwrap();
       toast.success(res.message || "Request successful!", {
         id: toastId,
       });
@@ -56,7 +51,7 @@ const EditBaseUnitModal = ({ id }: { id: string }) => {
         <MyForm
           onSubmit={onSubmit}
           resolver={zodResolver(baseUnitFormSchema)}
-          defaultValues={data?.data}
+          defaultValues={data}
         >
           <div className="space-y-4">
             <MyInput name="name" label="Base unit name" type="text" />

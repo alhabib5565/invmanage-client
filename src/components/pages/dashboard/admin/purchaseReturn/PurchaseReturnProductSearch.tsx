@@ -9,6 +9,7 @@ type TSearchProps = {
   selectedPurchase: React.Dispatch<
     React.SetStateAction<TPurchaseProductItem[] | null>
   >;
+  setPurchase_ID: React.Dispatch<React.SetStateAction<string>>;
   warehouse: string;
   supplier: string;
 };
@@ -16,25 +17,27 @@ const PurchaseReturnProductSearch = ({
   warehouse,
   supplier,
   selectedPurchase,
+  setPurchase_ID,
 }: TSearchProps) => {
   const [inputValue, setInputValue] = useState("");
   const searchTerm = useDebounce({ value: inputValue });
 
   const { data } = useGetAllPurchasesQuery(
-    { supplier, warehouse, purchaseId: searchTerm },
+    { supplier, warehouse, searchTerm },
     {
       skip: !supplier || !warehouse || !searchTerm,
     }
   );
+
   const handleInputChage = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setInputValue(value);
   };
 
-  const handleSuggetionClick = (items: TPurchaseProductItem[]) => {
+  const handleSuggetionClick = (purchase: TPurchase) => {
     setInputValue("");
-
-    selectedPurchase(items);
+    setPurchase_ID(purchase._id);
+    selectedPurchase(purchase?.items);
   };
   return (
     <div className="relative">
@@ -49,7 +52,7 @@ const PurchaseReturnProductSearch = ({
         <ul className="h-[300px] w-full overflow-y-scroll top-14 absolute bg-white z-50 left-1/2 -translate-x-1/2 rounded-md border">
           {data?.data?.map((item: TPurchase) => (
             <li
-              onClick={() => handleSuggetionClick(item.items)}
+              onClick={() => handleSuggetionClick(item)}
               className="px-3 py-2 text-[#343A40] font-semibold hover:bg-primary hover:text-white cursor-pointer truncate flex gap-2 items-center"
               key={item._id}
             >

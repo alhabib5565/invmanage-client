@@ -14,18 +14,49 @@ import SelectedPurchaseTable from "./SelectedPurchaseTable";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { purchaseRetrunSchema } from "./pruchaseRetrun.validation";
 import { defaultPurchaseValues } from "../purchase/purchase.validation";
+import { toast } from "sonner";
+import { useCreatePurchaseRetrunMutation } from "@/redux/api/admin/purchaseReturn.api";
+import { useNavigate } from "react-router-dom";
 
 const CreatePurchaseRetrun = () => {
   const [selectedPurchase, setSelectedPurchase] = useState<
     TPurchaseProductItem[] | null
   >(null);
+  const [purchase_ID, setPurchase_ID] = useState("");
 
   const [warehouse, setWarehouse] = useState("");
   const [supplier, setSupplier] = useState("");
 
-  const isLoading = false;
-  const onSubmit = (value: FieldValues) => {
-    console.log({ value, returnItems: selectedPurchase });
+  const navigate = useNavigate();
+
+  const [createPurchaseReturn, { isLoading }] =
+    useCreatePurchaseRetrunMutation();
+
+  const onSubmit = async (value: FieldValues) => {
+    if (!selectedPurchase || selectedPurchase.length < 1) {
+      return toast.error("Please add product to purchase list");
+    }
+
+    const purchaseRetrunDate = {
+      ...value,
+      returnItems: [...selectedPurchase],
+      purchase: purchase_ID,
+    };
+    console.log(purchaseRetrunDate);
+
+    const toastId = toast.loading("Processing your request...");
+    try {
+      const res = await createPurchaseReturn(purchaseRetrunDate).unwrap();
+      toast.success(res.message || "Request successful!", {
+        id: toastId,
+      });
+      navigate("/admin/purchase-return-list");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Request failed. Please try again", {
+        id: toastId,
+      });
+    }
   };
   const { warehouseOptions } = useWarehouseOptions();
   const { customerOptions } = useCustomerOptions(); // it will replace with supplier options
@@ -42,7 +73,7 @@ const CreatePurchaseRetrun = () => {
           defaultValues={defaultPurchaseValues}
         >
           <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            <MyDatePicker name="purchaseRetrunDate" label="Date" />
+            <MyDatePicker name="returnDate" label="Date" />
             <MySelectWithWatch
               onValueChange={setWarehouse}
               name="warehouse"
@@ -69,6 +100,7 @@ const CreatePurchaseRetrun = () => {
               warehouse={warehouse}
               supplier={supplier}
               selectedPurchase={setSelectedPurchase}
+              setPurchase_ID={setPurchase_ID}
             />
           </div>
 
