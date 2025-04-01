@@ -122,7 +122,9 @@ const SelectedProductTable = ({
                   </div>
                 </TableCell>
 
-                <TableCell>{product?.discountAmount || "0.0"} TK</TableCell>
+                <TableCell>
+                  {(product?.discountAmount || 0) * product.quantity} TK
+                </TableCell>
                 <TableCell>
                   ({product.productTaxRate}%) {taxAmount} TK
                 </TableCell>

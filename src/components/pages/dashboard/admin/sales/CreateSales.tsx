@@ -1,80 +1,45 @@
 import MyDatePicker from "@/components/from/MyDatePicker";
 import MyForm from "@/components/from/MyForm";
 import MySelect from "@/components/from/MySelect";
+import ProductSearch from "@/components/myUi/ProductSearch";
 import PageHeader from "@/components/shared/PageHeader";
-import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import useCustomerOptions from "@/hooks/useCustomerOptions";
 import useWarehouseOptions from "@/hooks/useWarehouseOptons";
 import { useState } from "react";
 import { FieldValues } from "react-hook-form";
-
-import { TProductItemWithQuanity } from "./purchase.type";
-import SelectedProductTable from "./SelectedProductTable";
-import ProductSearch from "@/components/myUi/ProductSearch";
-
-import OrderSummaryTable from "./OrderSummaryTable";
-import { toast } from "sonner";
-import MyInputWithSuffix from "@/components/from/MyInputWithSuffix";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { defaultPurchaseValues, purchaseSchema } from "./purchase.validation";
-import { useCreatePurchaseMutation } from "@/redux/api/admin/purchase.api";
+import { TProductItemWithQuanity } from "../purchase/purchase.type";
+import SelectedProductTable from "../purchase/SelectedProductTable";
+import OrderSummaryTable from "../purchase/OrderSummaryTable";
 import MyInputSuffixWithWatch from "@/components/from/MyInputSuffixWithWatch";
+import MyInputWithSuffix from "@/components/from/MyInputWithSuffix";
+import { Button } from "@/components/ui/button";
 
-export type TOrderSummary = {
-  taxRate: number;
-  discountAmount: number;
-  shipping: number;
-};
-
-const CreatePurchase = () => {
+const CreateSales = () => {
   // states
   const [selectedProduct, setSelectedProduct] = useState<
     TProductItemWithQuanity[]
   >([]);
-  const [discountAmount, setDiscountAmount] = useState(0);
+  const [discountAmount, setDiscountAmount] = useState(10);
   const [taxRate, setTaxRate] = useState(0);
   const [shipping, setShipping] = useState(0);
 
-  const [createPurchase, { isLoading }] = useCreatePurchaseMutation();
-
-  const onSubmit = async (value: FieldValues) => {
-    if (selectedProduct.length < 1) {
-      return toast.error("Please add product to purchase list");
-    }
-
-    const purchaseDate = {
-      ...value,
-      items: [...selectedProduct],
-    };
-    console.log(purchaseDate);
-
-    const toastId = toast.loading("Processing your request...");
-    try {
-      const res = await createPurchase(purchaseDate).unwrap();
-      toast.success(res.message || "Request successful!", {
-        id: toastId,
-      });
-      // navigate("/admin/products");
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Request failed. Please try again", {
-        id: toastId,
-      });
-    }
+  const onSubmit = (value: FieldValues) => {
+    console.log(value);
   };
 
-  const { warehouseOptions } = useWarehouseOptions();
-  const { customerOptions } = useCustomerOptions(); // it will replace with supplier options
+  const isLoading = false;
 
+  const { warehouseOptions } = useWarehouseOptions();
+  const { customerOptions } = useCustomerOptions();
   return (
     <div className="space-y-6">
       <PageHeader isBack />
       <div className="bg-white rounded-[16px] p-6 shadow border border-[#f2f4f7]">
         <MyForm
           onSubmit={onSubmit}
-          resolver={zodResolver(purchaseSchema)}
-          defaultValues={defaultPurchaseValues}
+          // resolver={zodResolver(purchaseSchema)}
+          //   defaultValues={defaultPurchaseValues}
         >
           <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             <MyDatePicker name="purchaseDate" label="Date" />
@@ -86,11 +51,11 @@ const CreatePurchase = () => {
               placeholder="Search Warehouse"
             />
             <MySelect
-              name="supplier"
-              label="Supplier"
+              name="customer"
+              label="Customer"
               isSuggestion={true}
               options={customerOptions || []}
-              placeholder="Search Supplier"
+              placeholder="Search Customer"
             />
           </div>
 
@@ -190,32 +155,4 @@ const CreatePurchase = () => {
   );
 };
 
-export default CreatePurchase;
-
-/**
- * const handleUpdateQuantity = (
-    porductItem: TPurchaseProductItemWithProduct,
-    quantityUpdateType: "add" | "minus"
-  ) => {
-    const alreadySelectedProducts = [...selectedProduct];
-
-    const product = alreadySelectedProducts.find(
-      (product) => product._id === porductItem._id
-    );
-    if (!product) return;
-
-    const newQuantity =
-      quantityUpdateType === "add"
-        ? product.quantity + 1
-        : Math.max(1, product.quantity - 1);
-
-    product.quantity = newQuantity;
-
-    product.taxAmount = product.quantity * product.tax;
-    product.subTotal =
-      product.quantity * (product.netUnitPrice + product.taxRate);
-
-    setSelectedProduct(alreadySelectedProducts);
-  };
-
- */
+export default CreateSales;

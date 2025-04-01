@@ -10,6 +10,8 @@ const OrderSummaryTable = ({
   orderSummary: TOrderSummary;
   selectedProduct: TProductItemWithQuanity[];
 }) => {
+  console.log("render");
+  console.log(orderSummary);
   const sumOfAllSubTotal = selectedProduct?.reduce((prev, current) => {
     const { subTotal } = calculateProductTotals(current);
     return (prev += subTotal);

@@ -28,6 +28,11 @@ import EditPurchase from "@/components/pages/dashboard/admin/purchase/EditPurcha
 import PurchaseList from "@/components/pages/dashboard/admin/purchase/PurchaseList";
 import CreatePurchaseRetrun from "@/components/pages/dashboard/admin/purchaseReturn/CreatePurchaseRetrun";
 import PurchaseReturnList from "@/components/pages/dashboard/admin/purchaseReturn/PurchaseReturnList";
+import CreateSales from "@/components/pages/dashboard/admin/sales/CreateSales";
+import EditSales from "@/components/pages/dashboard/admin/sales/EditSales";
+import SalesList from "@/components/pages/dashboard/admin/sales/SalesList";
+import CreateSalesRetrun from "@/components/pages/dashboard/admin/salesRetrun/CreateSalesRetrun";
+import SalesReturnList from "@/components/pages/dashboard/admin/salesRetrun/SalesReturnList";
 import Units from "@/components/pages/dashboard/admin/unit/Units";
 import CreateWarehouse from "@/components/pages/dashboard/admin/warehouse/CreateWarehouse";
 import EditWarehouse from "@/components/pages/dashboard/admin/warehouse/EditWarehouse";
@@ -190,6 +195,37 @@ export const adminPaths: TUserPath[] = [
       {
         path: "create-purchase-retrun",
         element: <CreatePurchaseRetrun />,
+      },
+    ],
+  },
+
+  {
+    name: "Sales",
+    icon: ShoppingBag,
+    children: [
+      {
+        name: "Sales List",
+        path: "sales-list",
+        element: <SalesList />,
+        icon: List,
+      },
+      {
+        path: "create-sales",
+        element: <CreateSales />,
+      },
+      {
+        path: ":id/edit-sales",
+        element: <EditSales />,
+      },
+      {
+        name: "Return Sales",
+        path: "sales-return-list",
+        element: <SalesReturnList />,
+        icon: ArrowLeft,
+      },
+      {
+        path: "create-sales-retrun",
+        element: <CreateSalesRetrun />,
       },
     ],
   },
