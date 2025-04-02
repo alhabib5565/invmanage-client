@@ -57,7 +57,7 @@ const ProductSearch = ({
     <div className="relative">
       <Input
         type="text"
-        placeholder="search..."
+        placeholder="search product code or name..."
         value={inputValue}
         onChange={handleInputChage}
       />

@@ -14,21 +14,49 @@ import OrderSummaryTable from "../purchase/OrderSummaryTable";
 import MyInputSuffixWithWatch from "@/components/from/MyInputSuffixWithWatch";
 import MyInputWithSuffix from "@/components/from/MyInputWithSuffix";
 import { Button } from "@/components/ui/button";
+import { defaultSalesValues, salesSchema } from "./sales.validation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import MyTextarea from "@/components/from/MyTextarea";
+import { toast } from "sonner";
+import { useCreateSaleMutation } from "@/redux/api/admin/sales.api";
+import { useNavigate } from "react-router-dom";
 
 const CreateSales = () => {
   // states
   const [selectedProduct, setSelectedProduct] = useState<
     TProductItemWithQuanity[]
   >([]);
-  const [discountAmount, setDiscountAmount] = useState(10);
+  const [discountAmount, setDiscountAmount] = useState(0);
   const [taxRate, setTaxRate] = useState(0);
   const [shipping, setShipping] = useState(0);
 
-  const onSubmit = (value: FieldValues) => {
-    console.log(value);
-  };
+  //query
+  const [createSales, { isLoading }] = useCreateSaleMutation();
+  const navigate = useNavigate();
+  const onSubmit = async (value: FieldValues) => {
+    if (selectedProduct.length < 1) {
+      return toast.error("Please add product to purchase list");
+    }
 
-  const isLoading = false;
+    const salesDate = {
+      ...value,
+      items: [...selectedProduct],
+    };
+
+    const toastId = toast.loading("Processing your request...");
+    try {
+      const res = await createSales(salesDate).unwrap();
+      toast.success(res.message || "Request successful!", {
+        id: toastId,
+      });
+      navigate("/admin/sales-list");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Request failed. Please try again", {
+        id: toastId,
+      });
+    }
+  };
 
   const { warehouseOptions } = useWarehouseOptions();
   const { customerOptions } = useCustomerOptions();
@@ -38,11 +66,11 @@ const CreateSales = () => {
       <div className="bg-white rounded-[16px] p-6 shadow border border-[#f2f4f7]">
         <MyForm
           onSubmit={onSubmit}
-          // resolver={zodResolver(purchaseSchema)}
-          //   defaultValues={defaultPurchaseValues}
+          resolver={zodResolver(salesSchema)}
+          defaultValues={defaultSalesValues}
         >
           <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            <MyDatePicker name="purchaseDate" label="Date" />
+            <MyDatePicker name="salesDate" label="Date" />
             <MySelect
               name="warehouse"
               label="Warehouse"
@@ -68,7 +96,7 @@ const CreateSales = () => {
             />
           </div>
 
-          {/* items table */}
+          {/*selected items table */}
           <div className="mt-4 space-y-2">
             <Label>Items:</Label>
 
@@ -87,8 +115,6 @@ const CreateSales = () => {
             }}
             selectedProduct={selectedProduct}
           />
-
-          {/* order summary input */}
 
           <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-4">
             <MyInputSuffixWithWatch
@@ -143,9 +169,24 @@ const CreateSales = () => {
               ]}
               placeholder="Choose Payment Status"
             />
+            <MySelect
+              name="paymentMethod"
+              label="Payment Method"
+              isSuggestion={false}
+              options={[
+                {
+                  label: "Cash",
+                  value: "Cash",
+                },
+              ]}
+              placeholder="Choose Payment Method"
+            />
+          </div>
+          <div className="col-span-1 lg:col-span-2 mt-4">
+            <MyTextarea name="note" label="Note" rows={2} required={false} />
           </div>
           <div className="flex justify-end mt-4">
-            <Button disabled={isLoading}>
+            <Button disabled={isLoading || selectedProduct.length < 1}>
               {isLoading ? "Saving..." : "Save"}
             </Button>
           </div>
