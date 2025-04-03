@@ -31,7 +31,7 @@ const OrderSummaryTable = ({
           <TableRow>
             <TableCell className="font-medium">Tax Rate</TableCell>
             <TableCell>
-              TK {totalTax} ({orderSummary.taxRate}) %
+              TK {totalTax.toFixed(2)} ({orderSummary.taxRate}) %
             </TableCell>
           </TableRow>
           <TableRow>
@@ -44,7 +44,7 @@ const OrderSummaryTable = ({
           </TableRow>
           <TableRow>
             <TableCell className="font-medium">Grand Total</TableCell>
-            <TableCell>{grandTotal}</TableCell>
+            <TableCell>{grandTotal.toFixed(2)}</TableCell>
           </TableRow>
         </TableBody>
       </Table>

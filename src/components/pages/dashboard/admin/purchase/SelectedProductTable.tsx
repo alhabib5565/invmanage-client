@@ -91,7 +91,7 @@ const SelectedProductTable = ({
                   <Badge className="bg-[#fff1d3] text-[#ffb821]">
                     {product?.stock?.reduce((prevValue, currentValue) => {
                       return (prevValue += currentValue.quantity);
-                    }, 0)}
+                    }, 0)}{" "}
                     {product.productUnit.name}
                   </Badge>
                 </TableCell>

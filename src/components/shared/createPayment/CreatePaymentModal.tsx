@@ -19,6 +19,7 @@ export type TPayFromProps = {
   customer_id?: string;
   collectedBy?: string;
   sale?: string;
+  className?: string;
 };
 
 const CreatePaymentModal = ({
