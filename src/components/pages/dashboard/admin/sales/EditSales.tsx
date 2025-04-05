@@ -68,7 +68,7 @@ const EditSales = () => {
 
     const toastId = toast.loading("Processing your request...");
     try {
-      const res = await editSale(salesDate).unwrap();
+      const res = await editSale({data:salesDate, id}).unwrap();
       toast.success(res.message || "Request successful!", {
         id: toastId,
       });
