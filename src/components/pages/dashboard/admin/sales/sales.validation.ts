@@ -1,7 +1,7 @@
 import * as z from "zod";
 
 export const salesSchema = z.object({
-  salesDate: z.date({
+  salesDate: z.any({
     required_error: "Sales date is required",
   }),
 

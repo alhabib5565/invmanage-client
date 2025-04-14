@@ -11,6 +11,7 @@ const OrderSummaryTable = ({
   selectedProduct: TProductItemWithQuanity[];
 }) => {
   const sumOfAllSubTotal = selectedProduct?.reduce((prev, current) => {
+    if (current.isDeleted) return prev + 0;
     const { subTotal } = calculateProductTotals(current);
     return (prev += subTotal);
   }, 0);

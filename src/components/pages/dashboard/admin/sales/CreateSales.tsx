@@ -103,6 +103,7 @@ const CreateSales = () => {
             <SelectedProductTable
               setSelectedProduct={setSelectedProduct}
               selectedProduct={selectedProduct}
+              whareUse="Create sale Page"
             />
           </div>
 

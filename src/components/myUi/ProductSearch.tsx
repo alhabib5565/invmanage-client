@@ -14,6 +14,7 @@ type TProductSearchProps = {
     React.SetStateAction<TProductItemWithQuanity[]>
   >;
   selectedProduct: TProductItemWithQuanity[];
+  initialProducts: TProductItemWithQuanity[];
 };
 
 const ProductSearch = ({
@@ -43,12 +44,21 @@ const ProductSearch = ({
       (product) => product._id === item._id
     );
 
-    if (isProductAlreadySelected) {
+    if (isProductAlreadySelected && !isProductAlreadySelected.isDeleted) {
       return toast.error("This product already selected");
+    }
+
+    if (isProductAlreadySelected?.isDeleted) {
+      //when purchase and sale edit. then isProductAlreadySelected contain isDeleted field if the product remove from the sale or purchase
+      const products = [...selectedProduct];
+      const product = products.find((product) => product._id === item._id);
+      delete product!.isDeleted;
+      setSelectedProduct(products);
     } else {
       setSelectedProduct((prevItem) => [
         ...prevItem,
-        { ...item, quantity: 1, product: item._id },
+        { ...item, quantity: 1, product: item._id, AddedWhenEdit: true },
+        // AddedWhenEdit: true use kora hobe jekhon sale or pruchase edit er somoy jodi notun product add kora hobe tokhon
       ]);
     }
   };

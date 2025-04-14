@@ -32,6 +32,9 @@ const EditPurchase = () => {
   const [selectedProduct, setSelectedProduct] = useState<
     TProductItemWithQuanity[]
   >([]);
+  const [initialProducts, setInitialProducts] = useState<
+    TProductItemWithQuanity[]
+  >([]);
   const [discountAmount, setDiscountAmount] = useState(0);
   const [taxRate, setTaxRate] = useState(0);
   const [shipping, setShipping] = useState(0);
@@ -52,6 +55,7 @@ const EditPurchase = () => {
         product: item?.product?._id,
       }));
       setSelectedProduct([...items]);
+      setInitialProducts([...items]);
     }
   }, [purchaseData]);
 
@@ -130,6 +134,7 @@ const EditPurchase = () => {
             <ProductSearch
               setSelectedProduct={setSelectedProduct}
               selectedProduct={selectedProduct}
+              initialProducts={initialProducts}
             />
           </div>
 
@@ -140,6 +145,8 @@ const EditPurchase = () => {
             <SelectedProductTable
               setSelectedProduct={setSelectedProduct}
               selectedProduct={selectedProduct}
+              initialProducts={initialProducts}
+              whareUse="Edit Purchase Page"
             />
           </div>
 

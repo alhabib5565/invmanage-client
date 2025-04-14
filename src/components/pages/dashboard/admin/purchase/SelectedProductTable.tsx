@@ -11,16 +11,24 @@ import { Minus, Pen, Plus, Trash2 } from "lucide-react";
 import { TProductItemWithQuanity } from "./purchase.type";
 import { Button } from "@/components/ui/button";
 import { calculateProductTotals } from "./purcase.utils";
+import { TWhareUse } from "@/type/common.type";
+
 type TSelectProductTableProps = {
   setSelectedProduct: React.Dispatch<
     React.SetStateAction<TProductItemWithQuanity[]>
   >;
   selectedProduct: TProductItemWithQuanity[];
+  initialProducts: TProductItemWithQuanity[];
+  whareUse: TWhareUse;
 };
+
 const SelectedProductTable = ({
   selectedProduct,
   setSelectedProduct,
+  whareUse,
+  initialProducts,
 }: TSelectProductTableProps) => {
+  //quantity increase or decrease handler
   const handleUpdateQuantity = (
     productItem: TProductItemWithQuanity,
     quantityUpdateType: "add" | "minus"
@@ -43,11 +51,22 @@ const SelectedProductTable = ({
   };
 
   const handleDeleteProduct = (product_id: string) => {
-    const filteredProduct = selectedProduct.filter(
-      (product) => product._id !== product_id
-    );
-    setSelectedProduct(filteredProduct);
+    if (
+      (whareUse === "Edit Purchase Page" || whareUse === "Edit sale Page") &&
+      initialProducts.find((product) => product._id === product_id)
+    ) {
+      const products = [...selectedProduct];
+      const product = products.find((product) => product._id === product_id);
+      product!.isDeleted = true;
+      setSelectedProduct(products);
+    } else {
+      const filteredProduct = selectedProduct.filter(
+        (product) => product._id !== product_id
+      );
+      setSelectedProduct(filteredProduct);
+    }
   };
+
   return (
     <div className="relative h-fit max-h-[500px] overflow-y-scroll">
       <Table className="border-b">
@@ -68,8 +87,8 @@ const SelectedProductTable = ({
         <TableBody>
           {selectedProduct?.map((product: TProductItemWithQuanity) => {
             const { taxAmount, subTotal, netUnitPrice } =
-              calculateProductTotals(product);
-
+              calculateProductTotals({ ...product });
+            if (product.isDeleted) return;
             return (
               <TableRow key={product._id}>
                 <TableCell className="space-y-1">
@@ -136,6 +155,7 @@ const SelectedProductTable = ({
                 <TableCell>
                   <Button
                     variant="ghost"
+                    type="button"
                     size="icon"
                     className="text-red-500 hover:text-red-600 hover:bg-red-100"
                     onClick={() => handleDeleteProduct(product._id)}

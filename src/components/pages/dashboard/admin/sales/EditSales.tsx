@@ -31,6 +31,10 @@ const EditSales = () => {
   const [selectedProduct, setSelectedProduct] = useState<
     TProductItemWithQuanity[]
   >([]);
+  const [initialProducts, setInitialProducts] = useState<
+    TProductItemWithQuanity[]
+  >([]); //
+  console.log(selectedProduct);
   const [discountAmount, setDiscountAmount] = useState(0);
   const [taxRate, setTaxRate] = useState(0);
   const [shipping, setShipping] = useState(0);
@@ -52,6 +56,7 @@ const EditSales = () => {
         product: item?.product?._id,
       }));
       setSelectedProduct([...items]);
+      setInitialProducts([...items]);
     }
   }, [purchaseData]);
 
@@ -61,6 +66,9 @@ const EditSales = () => {
       return toast.error("Please add product to purchase list");
     }
 
+    value.shipping = Number(value.shipping);
+    value.discountAmount = Number(value.discountAmount);
+
     const salesDate = {
       ...value,
       items: [...selectedProduct],
@@ -68,7 +76,7 @@ const EditSales = () => {
 
     const toastId = toast.loading("Processing your request...");
     try {
-      const res = await editSale({data:salesDate, id}).unwrap();
+      const res = await editSale({ data: salesDate, id }).unwrap();
       toast.success(res.message || "Request successful!", {
         id: toastId,
       });
@@ -129,6 +137,7 @@ const EditSales = () => {
             <ProductSearch
               setSelectedProduct={setSelectedProduct}
               selectedProduct={selectedProduct}
+              initialProducts={initialProducts}
             />
           </div>
 
@@ -139,6 +148,8 @@ const EditSales = () => {
             <SelectedProductTable
               setSelectedProduct={setSelectedProduct}
               selectedProduct={selectedProduct}
+              initialProducts={initialProducts}
+              whareUse="Edit sale Page"
             />
           </div>
 

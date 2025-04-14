@@ -17,6 +17,8 @@ export type TPurchaseProductItem = {
 
 export type TProductItemWithQuanity = TProduct & {
   quantity: number;
+  isDeleted?: boolean;
+  AddedWhenEdit?: boolean;
 };
 
 export type TPurchase = {
