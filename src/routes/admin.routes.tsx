@@ -25,6 +25,7 @@ import Products from "@/components/pages/dashboard/admin/product/Products";
 import UpdateProduct from "@/components/pages/dashboard/admin/product/UpdateProduct";
 import CreatePurchase from "@/components/pages/dashboard/admin/purchase/CreatePurchase";
 import EditPurchase from "@/components/pages/dashboard/admin/purchase/EditPurchase";
+import PurchaseDetails from "@/components/pages/dashboard/admin/purchase/PurchaseDetails";
 import PurchaseList from "@/components/pages/dashboard/admin/purchase/PurchaseList";
 import CreatePurchaseRetrun from "@/components/pages/dashboard/admin/purchaseReturn/CreatePurchaseRetrun";
 import PurchaseReturnList from "@/components/pages/dashboard/admin/purchaseReturn/PurchaseReturnList";
@@ -185,6 +186,10 @@ export const adminPaths: TUserPath[] = [
       {
         path: ":id/edit-purchase",
         element: <EditPurchase />,
+      },
+      {
+        path: ":id/purchase-details",
+        element: <PurchaseDetails />,
       },
       {
         name: "Return Purchase",

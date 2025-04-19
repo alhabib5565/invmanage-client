@@ -14,7 +14,7 @@ type TProductSearchProps = {
     React.SetStateAction<TProductItemWithQuanity[]>
   >;
   selectedProduct: TProductItemWithQuanity[];
-  initialProducts: TProductItemWithQuanity[];
+  initialProducts?: TProductItemWithQuanity[];
 };
 
 const ProductSearch = ({

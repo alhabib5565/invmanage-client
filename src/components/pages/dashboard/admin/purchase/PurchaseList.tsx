@@ -78,9 +78,11 @@ const PurchaseList = () => {
                   <TableCell>{purchase.paidAmount} TK</TableCell>
                   <TableCell>
                     <div className="flex items-center justify-center">
-                      <button>
+                      <Link
+                        to={`/admin/${purchase.purchaseId}/purchase-details`}
+                      >
                         <Eye className="text-green-500 size-5 stroke-[2.8px]" />
-                      </button>
+                      </Link>
                       <Button
                         variant="ghost"
                         size="icon"

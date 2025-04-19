@@ -18,7 +18,7 @@ type TSelectProductTableProps = {
     React.SetStateAction<TProductItemWithQuanity[]>
   >;
   selectedProduct: TProductItemWithQuanity[];
-  initialProducts: TProductItemWithQuanity[];
+  initialProducts?: TProductItemWithQuanity[];
   whareUse: TWhareUse;
 };
 
@@ -53,7 +53,7 @@ const SelectedProductTable = ({
   const handleDeleteProduct = (product_id: string) => {
     if (
       (whareUse === "Edit Purchase Page" || whareUse === "Edit sale Page") &&
-      initialProducts.find((product) => product._id === product_id)
+      initialProducts?.find((product) => product._id === product_id)
     ) {
       const products = [...selectedProduct];
       const product = products.find((product) => product._id === product_id);
