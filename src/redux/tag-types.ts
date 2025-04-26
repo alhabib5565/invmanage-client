@@ -4,6 +4,7 @@ export const tags = {
   BookPurchase: "BookPurchase",
   Purchase: "Purchase",
   Sales: "Sales",
+  SalesRetrun: "SalesRetrun",
   PurchaseRetrun: "PurchaseRetrun",
   BookSale: "BookSale",
   Book: "Book",

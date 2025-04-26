@@ -9,46 +9,60 @@ import { useState } from "react";
 import { FieldValues } from "react-hook-form";
 import { Label } from "@/components/ui/label";
 import { TPurchaseProductItem } from "../purchase/purchase.type";
-import { defaultPurchaseValues } from "../purchase/purchase.validation";
 import { toast } from "sonner";
-import { useCreatePurchaseRetrunMutation } from "@/redux/api/admin/purchaseReturn.api";
 import { useNavigate } from "react-router-dom";
 import SelectedPurchaseTable from "../purchaseReturn/SelectedPurchaseTable";
-import SearchSales from "./SearchSales";
+import useDebounce from "@/hooks/useDebounce";
+import { useGetAllSalesQuery } from "@/redux/api/admin/sales.api";
+import { useCreateSalesRetrunMutation } from "@/redux/api/admin/salesRetrun.api";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  defaultSaleseRetrunValues,
+  salesReturnSchema,
+} from "./salesReturn.validation";
+import { TSalesItem } from "../sales/sales.type";
+import SalesAndPurchaseSearch from "../admin-shared/SalesAndPurchaseSearch";
 
 const CreateSalesRetrun = () => {
-  const [selectedPurchase, setSelectedPurchase] = useState<
-    TPurchaseProductItem[] | null
+  const [selectedSales, setSelectedSales] = useState<
+    TSalesItem[] | TPurchaseProductItem[] | null
   >(null);
-  const [purchase_ID, setPurchase_ID] = useState("");
-
+  const [inputValue, setInputValue] = useState("");
+  const [sales_ID, setSales_ID] = useState("");
   const [warehouse, setWarehouse] = useState("");
-  const [supplier, setSupplier] = useState("");
+  const [customer, setCustomer] = useState("");
+  const searchTerm = useDebounce({ value: inputValue });
+
+  const { data, isFetching: salesSearchLoading } = useGetAllSalesQuery(
+    { customer, warehouse, searchTerm },
+    {
+      skip: !customer || !warehouse || !searchTerm,
+    }
+  );
 
   const navigate = useNavigate();
 
-  const [createPurchaseReturn, { isLoading }] =
-    useCreatePurchaseRetrunMutation();
+  const [createPurchaseReturn, { isLoading }] = useCreateSalesRetrunMutation();
 
   const onSubmit = async (value: FieldValues) => {
-    if (!selectedPurchase || selectedPurchase.length < 1) {
-      return toast.error("Please add product to purchase list");
+    if (!selectedSales || selectedSales.length < 1) {
+      return toast.error("Please add product to sales list");
     }
 
-    const purchaseRetrunDate = {
+    const salesRetrunDate = {
       ...value,
-      returnItems: [...selectedPurchase],
-      purchase: purchase_ID,
+      returnItems: [...selectedSales],
+      sale: sales_ID,
     };
-    console.log(purchaseRetrunDate);
+    console.log(salesRetrunDate);
 
     const toastId = toast.loading("Processing your request...");
     try {
-      const res = await createPurchaseReturn(purchaseRetrunDate).unwrap();
+      const res = await createPurchaseReturn(salesRetrunDate).unwrap();
       toast.success(res.message || "Request successful!", {
         id: toastId,
       });
-      navigate("/admin/purchase-return-list");
+      navigate("/admin/sales-return-list");
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error?.data?.message || "Request failed. Please try again", {
@@ -57,18 +71,18 @@ const CreateSalesRetrun = () => {
     }
   };
   const { warehouseOptions } = useWarehouseOptions();
-  const { customerOptions } = useCustomerOptions(); // it will replace with supplier options
+  const { customerOptions } = useCustomerOptions();
 
   const isSelectedPurchaseExist =
-    selectedPurchase && selectedPurchase.length > 0 ? true : false;
+    selectedSales && selectedSales.length > 0 ? true : false;
   return (
     <div className="space-y-6">
       <PageHeader pageTitle="Create Purchase Return" isBack />
       <div className="bg-white rounded-[16px] p-6 shadow border border-[#f2f4f7]">
         <MyForm
           onSubmit={onSubmit}
-          // resolver={zodResolver(purchaseRetrunSchema)}
-          defaultValues={defaultPurchaseValues}
+          resolver={zodResolver(salesReturnSchema)}
+          defaultValues={defaultSaleseRetrunValues}
         >
           <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             <MyDatePicker name="returnDate" label="Date" />
@@ -76,29 +90,33 @@ const CreateSalesRetrun = () => {
               onValueChange={setWarehouse}
               name="warehouse"
               label="Warehouse"
-              isSuggestion={true}
+              isSuggestion={false}
               options={warehouseOptions || []}
               disabled={warehouse && isSelectedPurchaseExist ? true : false}
               placeholder="Search Warehouse"
             />
             <MySelectWithWatch
-              onValueChange={setSupplier}
-              name="supplier"
-              label="Supplier"
+              onValueChange={setCustomer}
+              name="customer"
+              label="Customer"
               isSuggestion={true}
               options={customerOptions || []}
-              disabled={supplier && isSelectedPurchaseExist ? true : false}
-              placeholder="Search Supplier"
+              disabled={customer && isSelectedPurchaseExist ? true : false}
+              placeholder="Search Customer"
             />
           </div>
           {/* product search */}
           <div className="mt-4 space-y-2">
-            <Label>Purchase:</Label>
-            <SearchSales
-              warehouse={warehouse}
-              supplier={supplier}
-              selectedPurchase={setSelectedPurchase}
-              setPurchase_ID={setPurchase_ID}
+            <Label>Sales:</Label>
+            <SalesAndPurchaseSearch
+              data={data?.data || []}
+              isLoading={salesSearchLoading}
+              inputValue={inputValue}
+              setInputValue={setInputValue}
+              selectedItem={setSelectedSales}
+              setItem_ID={setSales_ID}
+              disabled={!warehouse || !customer}
+              placeholder="Sales search by sales ID"
             />
           </div>
 
@@ -107,12 +125,12 @@ const CreateSalesRetrun = () => {
             <Label>Items:</Label>
 
             <SelectedPurchaseTable
-              setSelectedPurcaseItem={setSelectedPurchase}
-              selectedPurchaseItem={selectedPurchase}
+              setSelectedPurcaseItem={setSelectedSales}
+              selectedPurchaseItem={selectedSales}
             />
           </div>
           <div className="flex justify-end mt-4">
-            <Button disabled={isLoading}>
+            <Button disabled={isLoading || !selectedSales}>
               {isLoading ? "Saving..." : "Save"}
             </Button>
           </div>

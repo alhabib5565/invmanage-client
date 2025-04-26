@@ -7,7 +7,6 @@ import useCustomerOptions from "@/hooks/useCustomerOptions";
 import useWarehouseOptions from "@/hooks/useWarehouseOptons";
 import { useState } from "react";
 import { FieldValues } from "react-hook-form";
-import PurchaseReturnProductSearch from "./PurchaseReturnProductSearch";
 import { Label } from "@/components/ui/label";
 import { TPurchaseProductItem } from "../purchase/purchase.type";
 import SelectedPurchaseTable from "./SelectedPurchaseTable";
@@ -17,15 +16,28 @@ import { defaultPurchaseValues } from "../purchase/purchase.validation";
 import { toast } from "sonner";
 import { useCreatePurchaseRetrunMutation } from "@/redux/api/admin/purchaseReturn.api";
 import { useNavigate } from "react-router-dom";
+import { TSalesItem } from "../sales/sales.type";
+import useDebounce from "@/hooks/useDebounce";
+import { useGetAllPurchasesQuery } from "@/redux/api/admin/purchase.api";
+import SalesAndPurchaseSearch from "../admin-shared/SalesAndPurchaseSearch";
 
 const CreatePurchaseRetrun = () => {
-  const [selectedPurchase, setSelectedPurchase] = useState<
-    TPurchaseProductItem[] | null
-  >(null);
   const [purchase_ID, setPurchase_ID] = useState("");
 
+  const [selectedPurchase, setSelectedPurchase] = useState<
+    TSalesItem[] | TPurchaseProductItem[] | null
+  >(null);
+  const [inputValue, setInputValue] = useState("");
   const [warehouse, setWarehouse] = useState("");
   const [supplier, setSupplier] = useState("");
+  const searchTerm = useDebounce({ value: inputValue });
+
+  const { data, isFetching: salesSearchLoading } = useGetAllPurchasesQuery(
+    { supplier, warehouse, searchTerm },
+    {
+      skip: !supplier || !warehouse || !searchTerm,
+    }
+  );
 
   const navigate = useNavigate();
 
@@ -96,11 +108,15 @@ const CreatePurchaseRetrun = () => {
           {/* product search */}
           <div className="mt-4 space-y-2">
             <Label>Purchase:</Label>
-            <PurchaseReturnProductSearch
-              warehouse={warehouse}
-              supplier={supplier}
-              selectedPurchase={setSelectedPurchase}
-              setPurchase_ID={setPurchase_ID}
+            <SalesAndPurchaseSearch
+              data={data?.data || []}
+              isLoading={salesSearchLoading}
+              inputValue={inputValue}
+              setInputValue={setInputValue}
+              selectedItem={setSelectedPurchase}
+              setItem_ID={setPurchase_ID}
+              disabled={!warehouse || !supplier}
+              placeholder="Sales search by sales ID"
             />
           </div>
 

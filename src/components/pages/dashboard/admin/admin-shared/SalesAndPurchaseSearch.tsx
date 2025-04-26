@@ -20,7 +20,7 @@ type TSearchProps = {
   placeholder: string;
 };
 
-const SearchSales = ({
+const SalesAndPurchaseSearch = ({
   selectedItem,
   setItem_ID,
   setInputValue,
@@ -70,14 +70,11 @@ const SearchSales = ({
       />
       {inputValue && isSuggestionOpen && (
         <div className="top-14 absolute w-full bg-white z-50 left-1/2 -translate-x-1/2 rounded-md border">
-          {isLoading && (
+          {isLoading ? (
             <p className="px-4 py-2 text-sm text-gray-500">Searching...</p>
-          )}
-          {!isLoading && data?.length === 0 && (
+          ) : !isLoading && data?.length === 0 ? (
             <p className="px-4 py-2 text-sm text-gray-500">No Data Found</p>
-          )}
-
-          {data?.length > 0 && (
+          ) : data?.length > 0 ? (
             <ul className="h-[300px] w-full overflow-y-scroll ">
               {data?.map((item) => (
                 <li
@@ -89,6 +86,8 @@ const SearchSales = ({
                 </li>
               ))}
             </ul>
+          ) : (
+            ""
           )}
         </div>
       )}
@@ -96,4 +95,4 @@ const SearchSales = ({
   );
 };
 
-export default SearchSales;
+export default SalesAndPurchaseSearch;

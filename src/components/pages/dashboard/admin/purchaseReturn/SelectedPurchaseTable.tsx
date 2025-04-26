@@ -12,11 +12,12 @@ import { Minus, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TPurchaseProductItem } from "../purchase/purchase.type";
 import { calculateProductTotals } from "../purchase/purcase.utils";
+import { TSalesItem } from "../sales/sales.type";
 type TSelectProductTableProps = {
   setSelectedPurcaseItem: React.Dispatch<
-    React.SetStateAction<TPurchaseProductItem[] | null>
+    React.SetStateAction<TPurchaseProductItem[] | TSalesItem[] | null>
   >;
-  selectedPurchaseItem: TPurchaseProductItem[] | null;
+  selectedPurchaseItem: TPurchaseProductItem[] | TSalesItem[] | null;
 };
 
 const SelectedPurchaseTable = ({
@@ -49,7 +50,7 @@ const SelectedPurchaseTable = ({
         return purchaseItem;
       }
     });
-
+    // @ts-ignore
     setSelectedPurcaseItem(nextPurchaseItem);
   };
 
@@ -60,6 +61,7 @@ const SelectedPurchaseTable = ({
     const filteredProduct = selectedPurchaseItem.filter(
       (product) => product.product !== product_id
     );
+    // @ts-ignore
     setSelectedPurcaseItem(filteredProduct);
   };
 
@@ -81,7 +83,7 @@ const SelectedPurchaseTable = ({
         </TableHeader>
         {selectedPurchaseItem && selectedPurchaseItem.length > 0 && (
           <TableBody>
-            {selectedPurchaseItem?.map((product: TPurchaseProductItem) => {
+            {selectedPurchaseItem?.map((product) => {
               return (
                 <TableRow key={product.product}>
                   <TableCell className="space-y-1">
